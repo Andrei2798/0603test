@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Web App</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <!-- Подключаем скрипты Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Подключаем скрипт main.js -->
+    <script type="module" src="src/main.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div id="app" class="mt-5">
+        <form action="index.html" id="user-form" class="mb-4">
+          <div class="form-group">
+            <label for="name-input">Name:</label>
+            <input type="text" id="name-input" class="form-control" required />
+          </div>
+          <div class="form-group">
+            <label for="email-input">Email:</label>
+            <input
+              type="email"
+              id="email-input"
+              class="form-control"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="password-input">Password:</label>
+            <input
+              type="password"
+              id="password-input"
+              class="form-control"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="repeatPassword-input">Repeat password:</label>
+            <input
+              type="password"
+              id="repeatPassword-input"
+              class="form-control"
+              required
+            />
+          </div>
+          <button type="submit" id="add-user-btn" class="btn btn-primary">
+            Add user
+          </button>
+        </form>
+        <ul id="user-list" class="list-group mt-4"></ul>
+      </div>
+    </div>
+  </body>
+</html>
