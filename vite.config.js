@@ -7,7 +7,7 @@ export default defineConfig({
       input: {
         index: resolve(__dirname, "index.html"),
         // enter: resolve(__dirname, "static/enter.html"),
-        main: resolve(__dirname, "static/registration.html"),
+        main: resolve(__dirname, "registration.html"),
       },
     },
   },
