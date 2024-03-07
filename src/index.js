@@ -4,10 +4,16 @@ if (localStorage.getItem("isAuthorithed") == "true") {
   document.querySelector("#logout-button").hidden = false;
   document.querySelector("#enter-button").hidden = true;
   document.querySelector("#registration-button").hidden = true;
+  getUserName();
 } else {
   document.querySelector("#logout-button").hidden = true;
   document.querySelector("#enter-button").hidden = false;
   document.querySelector("#registration-button").hidden = false;
+}
+
+function getUserName() {
+  let userName = localStorage.getItem("userName");
+  document.querySelector("#userName").innerHTML = userName;
 }
 
 function exit() {
