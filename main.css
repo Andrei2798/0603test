@@ -1,0 +1,13 @@
+/* Дополнительные стили */
+.header {
+  background-color: yellow; /* Желтый цвет для хедера */
+}
+
+.header .container {
+  display: flex;
+  justify-content: space-between; /* Расположение элементов по краям */
+  align-items: center; /* Выравнивание по центру по вертикали */
+}
+.search-form {
+  display: flex;
+}
