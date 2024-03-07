@@ -19,7 +19,7 @@ function logIn(event) {
         if (user.name === name && user.password === password) {
           // Пользователь найден, аутентификация успешна
           userFound = true;
-          localStorage.setItem("isAuthorithed", 1);
+          localStorage.setItem("isAuthorithed", "true");
           // Используем относительный путь для перенаправления на главную страницу
           window.location.href = baseUrl + "/index.html";
         }

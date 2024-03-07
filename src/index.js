@@ -1,5 +1,24 @@
 import { usersRepository } from "./usersRepository.js";
 
+if (localStorage.getItem("isAuthorithed") == "true") {
+  document.querySelector("#logout-button").hidden = false;
+  document.querySelector("#enter-button").hidden = true;
+  document.querySelector("#registration-button").hidden = true;
+} else {
+  document.querySelector("#logout-button").hidden = true;
+  document.querySelector("#enter-button").hidden = false;
+  document.querySelector("#registration-button").hidden = false;
+}
+
+function exit() {
+  localStorage.setItem("isAuthorithed", "false");
+  document.querySelector("#logout-button").hidden = true;
+  document.querySelector("#enter-button").hidden = false;
+  document.querySelector("#registration-button").hidden = false;
+}
+
+document.querySelector("#logout-button").addEventListener("click", exit);
+
 function renderUserList(users) {
   const userList = document.querySelector("#user-list");
   if (userList) {
