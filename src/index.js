@@ -11,16 +11,22 @@ if (localStorage.getItem("isAuthorithed") == "true") {
   document.querySelector("#registration-button").hidden = false;
 }
 
+if (localStorage.getItem("isAdmin") === "true") {
+  document.querySelector("#show-users-btn").hidden = false;
+}
+
 function getUserName() {
   let userName = localStorage.getItem("userName");
   document.querySelector("#userName").innerHTML = userName;
 }
 
 function exit() {
-  localStorage.setItem("isAuthorithed", "false");
+  // localStorage.setItem("isAuthorithed", "false");
+  localStorage.clear();
   document.querySelector("#logout-button").hidden = true;
   document.querySelector("#enter-button").hidden = false;
   document.querySelector("#registration-button").hidden = false;
+  document.querySelector("#userName").hidden = true;
 }
 
 document.querySelector("#logout-button").addEventListener("click", exit);

@@ -20,12 +20,17 @@ addUserForm.addEventListener("submit", async (e) => {
   const nameInput = document.querySelector("#name-input");
   const emailInput = document.querySelector("#email-input");
   const passwordInput = document.querySelector("#password-input");
+  let randomID = Math.floor(Math.random() * 1000000000) + 1;
+  let today = new Date().toLocaleDateString("ru-RU");
 
   // Добавляем пользователя
   await usersRepository.create({
+    id: randomID,
     name: nameInput.value,
     email: emailInput.value,
     password: passwordInput.value,
+    registrationDate: today,
+    status: "unblocked",
   });
 
   // Получаем обновленный список пользователей и обновляем интерфейс

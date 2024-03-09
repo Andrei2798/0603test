@@ -22,6 +22,9 @@ function logIn(event) {
           let userName = document.querySelector("#name").value;
           localStorage.setItem("isAuthorithed", "true");
           localStorage.setItem("userName", userName);
+          if (user.status === "admin") {
+            localStorage.setItem("isAdmin", "true");
+          }
           // Используем относительный путь для перенаправления на главную страницу
           window.location.href = baseUrl + "/index.html";
         }
