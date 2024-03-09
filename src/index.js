@@ -27,6 +27,7 @@ function exit() {
   document.querySelector("#enter-button").hidden = false;
   document.querySelector("#registration-button").hidden = false;
   document.querySelector("#userName").hidden = true;
+  document.querySelector("#show-users-btn").hidden = true;
 }
 
 document.querySelector("#logout-button").addEventListener("click", exit);
