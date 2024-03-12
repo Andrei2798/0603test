@@ -1,18 +1,22 @@
 import { usersRepository } from "./usersRepository.js";
+import { collectionRepository } from "./collectionRepository.js";
 
 if (localStorage.getItem("isAuthorithed") == "true") {
   document.querySelector("#logout-button").hidden = false;
   document.querySelector("#enter-button").hidden = true;
   document.querySelector("#registration-button").hidden = true;
+  document.querySelector("#create-collection-btn").hidden = false;
   getUserName();
 } else {
   document.querySelector("#logout-button").hidden = true;
   document.querySelector("#enter-button").hidden = false;
   document.querySelector("#registration-button").hidden = false;
+  // document.querySelector("#create-collection-btn").hidden = false;
 }
 
 if (localStorage.getItem("isAdmin") === "true") {
   document.querySelector("#show-users-btn").hidden = false;
+  document.querySelector("#create-collection-btn").hidden = false;
 }
 
 function getUserName() {
@@ -28,6 +32,7 @@ function exit() {
   document.querySelector("#registration-button").hidden = false;
   document.querySelector("#userName").hidden = true;
   document.querySelector("#show-users-btn").hidden = true;
+  document.querySelector("#create-collection-btn").hidden = true;
 }
 
 document.querySelector("#logout-button").addEventListener("click", exit);
@@ -127,6 +132,41 @@ if (showUsersButton) {
 } else {
   console.error("Element with id 'show-users-btn' not found.");
 }
+
+document
+  .querySelector("#create-collection-btn")
+  .addEventListener("click", async () => {
+    document.querySelector("#create-collection-form").hidden = false;
+  });
+
+function createCollection() {
+  const collectionName = document.querySelector("#collection-name").value;
+  const collectionDescription = document.querySelector(
+    "#collection-description"
+  ).value;
+  const collectionTopic = document.querySelector("#collection-topic").value;
+
+  const collectionParams = {
+    name: collectionName,
+    description: collectionDescription,
+    theme: collectionTopic,
+    // Другие параметры, если они нужны
+  };
+
+  // Вызов метода для создания коллекции
+  collectionRepository
+    .createDocument(collectionParams)
+    .then(() => {
+      console.log("Первая коллекция успешно создана");
+    })
+    .catch((error) => {
+      console.error("Ошибка при создании первой коллекции:", error);
+    });
+}
+
+document
+  .querySelector("#create-collection-form")
+  .addEventListener("submit", createCollection());
 
 document.addEventListener("click", async (event) => {
   if (event.target.matches(".block-btn")) {

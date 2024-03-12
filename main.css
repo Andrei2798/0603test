@@ -11,3 +11,7 @@
 .search-form {
   display: flex;
 }
+
+.create-collection-form {
+  width: 20%;
+}
