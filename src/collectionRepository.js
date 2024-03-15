@@ -1,23 +1,27 @@
 import { getFirestore, collection, addDoc } from "firebase/firestore";
 import { app } from "../firebase";
 
-export class CollectionRepository {
-  db = getFirestore(app);
-  newCollectionName = "collections"; // Название новой коллекции
-
-  async createDocument(params) {
-    try {
-      const docRef = await addDoc(
-        collection(this.db, this.newCollectionName),
-        params
-      );
-      console.log("Document written with ID: ", docRef.id);
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
+class CollectionRepository {
+  constructor() {
+    this.db = getFirestore(app);
   }
 
-  // Другие методы для работы с новой коллекцией
+  async createCollection(collectionName, collectionData) {
+    try {
+      // Создаем новую коллекцию в Firestore
+      const newCollectionRef = collection(this.db, collectionName);
+
+      // Добавляем пустой документ в коллекцию с данными collectionData
+      await addDoc(newCollectionRef, collectionData);
+      console.log(this.db);
+      console.log(collectionName);
+      console.log("Коллекция успешно создана в Firestore!");
+      return true; // Возвращаем true в случае успешного создания
+    } catch (error) {
+      console.error("Ошибка при создании коллекции:", error);
+      return false; // Возвращаем false в случае ошибки
+    }
+  }
 }
 
 export const collectionRepository = new CollectionRepository();

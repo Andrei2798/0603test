@@ -15,3 +15,12 @@
 .create-collection-form {
   width: 20%;
 }
+
+.create-item-form {
+  width: 20%;
+  background-color: chartreuse;
+}
+
+.collection-select {
+  width: 80%;
+}

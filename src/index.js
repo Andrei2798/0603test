@@ -1,5 +1,6 @@
 import { usersRepository } from "./usersRepository.js";
 import { collectionRepository } from "./collectionRepository.js";
+// import { app } from "./firebase";
 
 if (localStorage.getItem("isAuthorithed") == "true") {
   document.querySelector("#logout-button").hidden = false;
@@ -33,6 +34,7 @@ function exit() {
   document.querySelector("#userName").hidden = true;
   document.querySelector("#show-users-btn").hidden = true;
   document.querySelector("#create-collection-btn").hidden = true;
+  document.querySelector("#create-collection-form").hidden = true;
 }
 
 document.querySelector("#logout-button").addEventListener("click", exit);
@@ -139,113 +141,16 @@ document
     document.querySelector("#create-collection-form").hidden = false;
   });
 
-function createCollection() {
-  const collectionName = document.querySelector("#collection-name").value;
-  const collectionDescription = document.querySelector(
-    "#collection-description"
-  ).value;
-  const collectionTopic = document.querySelector("#collection-topic").value;
-
-  const collectionParams = {
-    name: collectionName,
-    description: collectionDescription,
-    theme: collectionTopic,
-    // Другие параметры, если они нужны
-  };
-
-  // Вызов метода для создания коллекции
-  collectionRepository
-    .createDocument(collectionParams)
-    .then(() => {
-      console.log("Первая коллекция успешно создана");
-    })
-    .catch((error) => {
-      console.error("Ошибка при создании первой коллекции:", error);
-    });
-}
-
 document
   .querySelector("#create-collection-form")
-  .addEventListener("submit", createCollection());
+  .addEventListener("submit", async (e) => {
+    e.preventDefault();
+    let collectionName = document.querySelector("#collection-name").value;
+    let items = document.querySelector("#item").value;
 
-document.addEventListener("click", async (event) => {
-  if (event.target.matches(".block-btn")) {
-  } else if (event.target.matches(".unblock-btn")) {
-  } else if (event.target.matches(".delete-btn")) {
-  }
-});
-
-if (localStorage.getItem("isAuthorithed") == 1) {
-  document.querySelector("#show-users-btn").removeAttribute("hidden");
-}
-
-document.addEventListener("DOMContentLoaded", function () {
-  const blockButton = document.querySelector("#block-btn");
-  blockButton.addEventListener("click", blockSelectedUsers);
-
-  const unblockButton = document.querySelector("#unblock-btn");
-  unblockButton.addEventListener("click", unblockSelectedUsers);
-
-  const deleteButton = document.querySelector("#delete-btn");
-  deleteButton.addEventListener("click", deleteSelectedUsers);
-});
-
-function blockSelectedUsers() {
-  const selectedUsers = getSelectedUsers();
-  if (selectedUsers.length > 0) {
-    console.log("Block users:", selectedUsers);
-  } else {
-    console.log("No users selected for blocking.");
-  }
-}
-
-function unblockSelectedUsers() {
-  const selectedUsers = getSelectedUsers();
-  if (selectedUsers.length > 0) {
-    console.log("Unblock users:", selectedUsers);
-  } else {
-    console.log("No users selected for unblocking.");
-  }
-}
-
-function deleteSelectedUsers() {
-  const selectedUsers = getSelectedUsers();
-  if (selectedUsers.length > 0) {
-    console.log("Delete users:", selectedUsers);
-  } else {
-    console.log("No users selected for deletion.");
-  }
-}
-
-function getSelectedUsers() {
-  const checkboxes = document.querySelectorAll(
-    "#user-list input[type='checkbox']"
-  );
-  const selectedUsers = [];
-  checkboxes.forEach((checkbox, index) => {
-    if (checkbox.checked) {
-      selectedUsers.push(index);
-    }
+    collectionRepository.createCollection(collectionName, {
+      id: "",
+      tag: "",
+      name: "",
+    });
   });
-  return selectedUsers;
-}
-
-toolbar.addEventListener("click", function (event) {
-  if (event.target.classList.contains("btn")) {
-    const btnType = event.target.textContent.toLowerCase();
-    switch (btnType) {
-      case "block":
-        blockSelectedUsers();
-        break;
-      case "unblock":
-        unblockSelectedUsers();
-        break;
-      case "delete":
-        deleteSelectedUsers();
-        break;
-      default:
-        console.log("Unknown action");
-        break;
-    }
-  }
-});
