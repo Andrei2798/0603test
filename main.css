@@ -24,3 +24,7 @@
 .collection-select {
   width: 80%;
 }
+
+.forms-container {
+  display: flex;
+}

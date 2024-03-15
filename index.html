@@ -68,8 +68,9 @@
       </div>
     </header>
     <!-- Кнопка для отображения айтема -->
-    <button id="create-collection-btn" class="btn btn-primary mt-2" hidden>Create Collection</button>
-    <form id="create-collection-form" class="create-collection-form bg-danger text-white p-4 rounded" hidden>
+    <button id="create-collection-btn" class="btn btn-primary mt-2" hidden>Create Collection or item</button>
+    <div class="forms-container">
+      <form id="create-collection-form" class="create-collection-form bg-danger text-white p-4 rounded" hidden>
       <h2 class="text-center mb-4 text-primary">Create a New Collection</h2>
       <div class="form-group mx-auto">
         <label for="collection-name">Collection Name:</label>
@@ -92,20 +93,20 @@
       <button type="submit" class="btn btn-primary btn-block">Create Collection</button>
     </form>
     <form id="create-item-form" class="create-item-form  text-white p-4 rounded" hidden>
-      <h2 class="text-center mb-4 text-primary">Create a New Collection</h2>
-      <div class="form-group mx-auto">
-      <select name="" class="collection-select" id="collection-select">Select a collection</select>
-      </div>
-      <div class="form-group mx-auto">
-        <label for="item-name">Name:</label>
-        <input id="item-name" class="form-control" placeholder="Enter the name of item" required><input>
-      </div>
-      <div class="form-group mx-auto">
-        <label for="item-teg">Teg:</label>
-        <input type="text" id="item-teg" class="form-control" placeholder="Enter the teg" required />
-      </div>
-      <button type="submit" class="btn btn-primary btn-block">Create Collection</button>
+      <h2 class="text-center mb-4 text-primary">Create a New Item</h2>
+  <div class="form-group mx-auto">
+    <label for="collection-select">Select Collection:</label>
+    <select id="collection-select" class="form-control">
+      <!-- Опции коллекций будут добавлены динамически с помощью JavaScript -->
+    </select>
+  </div>
+  <div id="dynamic-fields" class="form-group mx-auto">
+    <!-- Дополнительные поля будут добавлены динамически в зависимости от выбранной коллекции -->
+  </div>
+  <button type="submit" class="btn btn-primary btn-block">Create Item</button>
     </form>
+  </div>
+    
     <!-- Кнопка для отображения списка пользователей -->
     <button id="show-users-btn" class="btn btn-primary mt-2" hidden>Show Users</button>
     <ul id="user-list" class="list-group mt-4"></ul>

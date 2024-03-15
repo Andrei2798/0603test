@@ -1,6 +1,5 @@
 import { usersRepository } from "./usersRepository.js";
 import { collectionRepository } from "./collectionRepository.js";
-// import { app } from "./firebase";
 
 if (localStorage.getItem("isAuthorithed") == "true") {
   document.querySelector("#logout-button").hidden = false;
@@ -26,7 +25,6 @@ function getUserName() {
 }
 
 function exit() {
-  // localStorage.setItem("isAuthorithed", "false");
   localStorage.clear();
   document.querySelector("#logout-button").hidden = true;
   document.querySelector("#enter-button").hidden = false;
@@ -139,6 +137,7 @@ document
   .querySelector("#create-collection-btn")
   .addEventListener("click", async () => {
     document.querySelector("#create-collection-form").hidden = false;
+    document.querySelector("#create-item-form").hidden = false;
   });
 
 document
@@ -146,11 +145,47 @@ document
   .addEventListener("submit", async (e) => {
     e.preventDefault();
     let collectionName = document.querySelector("#collection-name").value;
-    let items = document.querySelector("#item").value;
+    let itemsInput = document.querySelector("#item").value;
 
-    collectionRepository.createCollection(collectionName, {
+    let itemsArray = itemsInput.split(",").map((item) => item.trim());
+
+    // Создаем объект collectionData и добавляем в него стандартные поля
+    let collectionData = {
       id: "",
       tag: "",
       name: "",
+    };
+
+    // Добавляем остальные поля на основе элементов из массива itemsArray
+    itemsArray.forEach((item) => {
+      collectionData[item] = "";
     });
+
+    // Передаем объект collectionData в функцию createCollection
+    collectionRepository.createCollection(collectionName, collectionData);
   });
+
+// collectionRepository.getAllCollections();
+const collectionSelect = document.querySelector("#collection-select");
+
+// При загрузке страницы заполняем select существующими коллекциями
+window.addEventListener("DOMContentLoaded", async () => {
+  try {
+    // Получаем список коллекций
+    const collectionNames = await collectionRepository.getAllCollections();
+
+    // Очищаем текущие опции в элементе select
+    collectionSelect.innerHTML = "";
+
+    // Добавляем новые опции в элемент select
+    collectionNames.forEach((collectionName) => {
+      const option = document.createElement("option");
+      option.value = collectionName;
+      option.textContent = collectionName;
+      collectionSelect.appendChild(option);
+    });
+  } catch (error) {
+    console.error("Ошибка при получении списка коллекций:", error);
+  }
+});
+//////////////////////////////////////////////////\
