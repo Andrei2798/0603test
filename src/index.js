@@ -132,7 +132,7 @@ if (showUsersButton) {
 } else {
   console.error("Element with id 'show-users-btn' not found.");
 }
-
+///////////////////////////////////////////////////////////////////
 document
   .querySelector("#create-collection-btn")
   .addEventListener("click", async () => {
@@ -162,10 +162,42 @@ document
     });
 
     // Передаем объект collectionData в функцию createCollection
-    collectionRepository.createCollection(collectionName, collectionData);
+    const collectionCreated = await collectionRepository.createCollection(
+      collectionName,
+      collectionData
+    );
+
+    // Если коллекция успешно создана, обновляем Metadata
+    if (collectionCreated) {
+      try {
+        const metadataDocRef = doc(
+          collectionRepository.metadataCollection,
+          collectionName
+        );
+        const metadataDocSnapshot = await getDoc(metadataDocRef);
+
+        // Получаем дополнительные поля для указанной коллекции
+        const additionalFields = await collectionRepository.getAdditionalFields(
+          collectionName
+        );
+
+        // Если документ Metadata уже существует, обновляем его
+        if (metadataDocSnapshot.exists()) {
+          await updateDoc(metadataDocRef, {
+            additionalFields: additionalFields,
+          });
+        } else {
+          // Если документ Metadata не существует, создаем его
+          await setDoc(metadataDocRef, { additionalFields: additionalFields });
+        }
+
+        console.log("Metadata для коллекции успешно обновлен.");
+      } catch (error) {
+        console.error("Ошибка при обновлении Metadata для коллекции:", error);
+      }
+    }
   });
 
-// collectionRepository.getAllCollections();
 const collectionSelect = document.querySelector("#collection-select");
 
 // При загрузке страницы заполняем select существующими коллекциями
@@ -188,4 +220,6 @@ window.addEventListener("DOMContentLoaded", async () => {
     console.error("Ошибка при получении списка коллекций:", error);
   }
 });
-//////////////////////////////////////////////////\
+
+collectionRepository.getAdditionalFields("Nasty");
+//////////////////////////////////////////////////
