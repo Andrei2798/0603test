@@ -287,3 +287,34 @@ collectionSelect.addEventListener("change", async () => {
     console.error("Ошибка при обновлении дополнительных полей:", error);
   }
 });
+
+// Обработчик события отправки формы создания элемента
+document
+  .querySelector("#create-item-form")
+  .addEventListener("submit", async (e) => {
+    e.preventDefault(); // Предотвращаем стандартное поведение формы
+
+    try {
+      const collectionName = collectionSelect.value;
+      const itemName = document.querySelector("#item-name").value;
+      const tag = document.querySelector("#tag").value;
+      const itemFields = {};
+
+      const additionalFields = await collectionRepository.getAdditionalFields(
+        collectionName
+      );
+      additionalFields.forEach((field) => {
+        const fieldValue = document.querySelector(`#${field}`).value;
+        itemFields[field] = fieldValue;
+      });
+
+      await collectionRepository.createItem(
+        collectionName,
+        tag,
+        itemName,
+        itemFields
+      );
+    } catch (error) {
+      console.error("Ошибка при создании элемента:", error);
+    }
+  });

@@ -87,6 +87,24 @@ class CollectionRepository {
       return []; // Возвращаем пустой массив в случае ошибки
     }
   }
+
+  async createItem(collectionName, itemName, tag, itemFields) {
+    try {
+      const itemCollectionRef = collection(this.db, collectionName);
+
+      const itemData = {
+        name: itemName,
+        tag: tag,
+        ...itemFields,
+      };
+
+      await addDoc(itemCollectionRef, itemData);
+
+      console.log("Данные нового элемента:", itemData);
+    } catch (error) {
+      console.error("Ошибка при создании элемента:", error);
+    }
+  }
 }
 
 export const collectionRepository = new CollectionRepository();
