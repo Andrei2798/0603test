@@ -223,3 +223,67 @@ window.addEventListener("DOMContentLoaded", async () => {
 
 collectionRepository.getAdditionalFields("Nasty");
 //////////////////////////////////////////////////
+
+// Назначаем обработчик события change выпадающему списку коллекций
+collectionSelect.addEventListener("change", async () => {
+  try {
+    // Получаем выбранную коллекцию из выпадающего списка
+    const selectedCollection = collectionSelect.value;
+
+    // Получаем дополнительные поля для выбранной коллекции
+    const additionalFields = await collectionRepository.getAdditionalFields(
+      selectedCollection
+    );
+
+    // Очищаем предыдущие поля ввода
+    dynamicFieldsContainer.innerHTML = "";
+
+    // Создаем поля ввода на основе полученных дополнительных полей
+    additionalFields.forEach((field) => {
+      const label = document.createElement("label");
+      label.textContent = `${field}:`;
+
+      const input = document.createElement("input");
+      input.type = "text";
+      input.id = field;
+      input.name = field;
+
+      dynamicFieldsContainer.appendChild(label);
+      dynamicFieldsContainer.appendChild(input);
+    });
+  } catch (error) {
+    console.error("Ошибка при обновлении дополнительных полей:", error);
+  }
+});
+const dynamicFieldsContainer = document.querySelector("#dynamic-fields");
+// Назначаем обработчик события change выпадающему списку коллекций
+collectionSelect.addEventListener("change", async () => {
+  try {
+    // Получаем выбранную коллекцию из выпадающего списка
+    const selectedCollection = collectionSelect.value;
+
+    // Получаем дополнительные поля для выбранной коллекции
+    const additionalFields = await collectionRepository.getAdditionalFields(
+      selectedCollection
+    );
+
+    // Очищаем предыдущие поля ввода
+    dynamicFieldsContainer.innerHTML = "";
+
+    // Создаем поля ввода на основе полученных дополнительных полей
+    additionalFields.forEach((field) => {
+      const label = document.createElement("label");
+      label.textContent = `${field}:`;
+
+      const input = document.createElement("input");
+      input.type = "text";
+      input.id = field;
+      input.name = field;
+
+      dynamicFieldsContainer.appendChild(label);
+      dynamicFieldsContainer.appendChild(input);
+    });
+  } catch (error) {
+    console.error("Ошибка при обновлении дополнительных полей:", error);
+  }
+});

@@ -15,24 +15,6 @@ class CollectionRepository {
     this.metadataCollection = collection(this.db, "Metadata");
   }
 
-  // async createCollection(collectionName, collectionData) {
-  //   try {
-  //     // Создаем новую коллекцию в Firestore
-  //     const newCollectionRef = collection(this.db, collectionName);
-
-  //     // Добавляем пустой документ в коллекцию с данными collectionData
-  //     await addDoc(newCollectionRef, collectionData);
-  //     await setDoc(doc(this.metadataCollection, collectionName), {}); // ДОБАВЛЕНИЕ В Metadata
-  //     console.log(this.db);
-  //     console.log(collectionName);
-  //     console.log("Коллекция успешно создана в Firestore!");
-  //     return true; // Возвращаем true в случае успешного создания
-  //   } catch (error) {
-  //     console.error("Ошибка при создании коллекции:", error);
-  //     return false; // Возвращаем false в случае ошибки
-  //   }
-  // }
-
   async createCollection(collectionName, collectionData) {
     try {
       // Создаем новую коллекцию в Firestore
@@ -87,7 +69,7 @@ class CollectionRepository {
       if (docSnapshot.exists()) {
         const data = docSnapshot.data(); // получение данных из снимка документа
         if (data && data.additionalFields !== undefined) {
-          console.log(Object(data.additionalFields));
+          console.log("additional fields: " + Object(data.additionalFields));
           return Object(data.additionalFields);
         } else {
           console.error("Дополнительные поля не найдены");
