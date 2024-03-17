@@ -33,6 +33,7 @@ function exit() {
   document.querySelector("#show-users-btn").hidden = true;
   document.querySelector("#create-collection-btn").hidden = true;
   document.querySelector("#create-collection-form").hidden = true;
+  document.querySelector("#create-item-form").hidden = true;
 }
 
 document.querySelector("#logout-button").addEventListener("click", exit);
