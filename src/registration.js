@@ -13,8 +13,6 @@ addUserForm.addEventListener("submit", async (e) => {
   ).value;
   let randomID = Math.floor(Math.random() * 1000000000) + 1;
   let today = new Date().toLocaleDateString("ru-RU");
-  console.log(passwordInput);
-  console.log(repeatPasswordInput);
 
   if (repeatPasswordInput != passwordInput) {
     document.querySelector("#message").style.color = "red";

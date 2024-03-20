@@ -113,7 +113,26 @@
       </div>
       <button type="submit" class="btn btn-primary btn-block">Create Item</button>
   </form>
+
   </div>
+
+  <!-- Таблица для отображения коллекций -->
+  <h2 class="collection-title">Collections</h2>
+<table id="collection-table" class="table mt-4">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Collection Name</th>
+      <th>Description</th>
+      <th>Topic</th>
+      <th>Image</th>
+      <!-- Другие заголовки столбцов, если нужно -->
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Здесь будут добавлены строки с данными о коллекциях -->
+  </tbody>
+</table>
     
     <!-- Кнопка для отображения списка пользователей -->
     <button id="show-users-btn" class="btn btn-primary mt-2" hidden>Show Users</button>
@@ -121,6 +140,4 @@
     <!-- Подключаем скрипты Bootstrap (необходимо для работы некоторых компонентов) -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Подключаем скрипт main.js -->
-  </body>
-</html>
+    

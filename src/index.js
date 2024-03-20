@@ -11,7 +11,6 @@ if (localStorage.getItem("isAuthorithed") == "true") {
   document.querySelector("#logout-button").hidden = true;
   document.querySelector("#enter-button").hidden = false;
   document.querySelector("#registration-button").hidden = false;
-  // document.querySelector("#create-collection-btn").hidden = false;
 }
 
 if (localStorage.getItem("isAdmin") === "true") {
@@ -37,87 +36,6 @@ function exit() {
 }
 
 document.querySelector("#logout-button").addEventListener("click", exit);
-
-function renderUserList(users) {
-  const userList = document.querySelector("#user-list");
-  if (userList) {
-    userList.innerHTML = "";
-
-    const headerRow = document.createElement("tr");
-
-    const selectHeader = document.createElement("th");
-    selectHeader.textContent = "";
-    headerRow.appendChild(selectHeader);
-
-    const idHeader = document.createElement("th");
-    idHeader.textContent = "ID";
-    headerRow.appendChild(idHeader);
-
-    const nameHeader = document.createElement("th");
-    nameHeader.textContent = "Name";
-    headerRow.appendChild(nameHeader);
-
-    const emailHeader = document.createElement("th");
-    emailHeader.textContent = "Email";
-    headerRow.appendChild(emailHeader);
-
-    const registrationDateHeader = document.createElement("th");
-    registrationDateHeader.textContent = "Registration Date";
-    headerRow.appendChild(registrationDateHeader);
-
-    userList.appendChild(headerRow);
-
-    const toolbar = document.createElement("div");
-    toolbar.classList.add("toolbar");
-
-    const blockButton = document.createElement("button");
-    blockButton.textContent = "Block";
-    blockButton.classList.add("btn", "btn-primary", "mr-2");
-    toolbar.appendChild(blockButton);
-
-    const unblockButton = document.createElement("button");
-    unblockButton.textContent = "Unblock";
-    unblockButton.classList.add("btn", "btn-primary", "mr-2");
-    toolbar.appendChild(unblockButton);
-
-    const deleteButton = document.createElement("button");
-    deleteButton.textContent = "Delete";
-    deleteButton.classList.add("btn", "btn-danger");
-    toolbar.appendChild(deleteButton);
-
-    userList.parentNode.insertBefore(toolbar, userList);
-
-    users.forEach((user) => {
-      const tr = document.createElement("tr");
-
-      const selectCell = document.createElement("td");
-      const selectCheckbox = document.createElement("input");
-      selectCheckbox.type = "checkbox";
-      selectCell.appendChild(selectCheckbox);
-      tr.appendChild(selectCell);
-
-      const idCell = document.createElement("td");
-      idCell.textContent = user.id;
-      tr.appendChild(idCell);
-
-      const nameCell = document.createElement("td");
-      nameCell.textContent = user.name;
-      tr.appendChild(nameCell);
-
-      const emailCell = document.createElement("td");
-      emailCell.textContent = user.email;
-      tr.appendChild(emailCell);
-
-      const registrationDateCell = document.createElement("td");
-      registrationDateCell.textContent = user.registrationDate;
-      tr.appendChild(registrationDateCell);
-
-      userList.appendChild(tr);
-    });
-  } else {
-    console.error("Element with id 'user-list' not found.");
-  }
-}
 
 const showUsersButton = document.querySelector("#show-users-btn");
 if (showUsersButton) {
@@ -319,3 +237,33 @@ document
       console.error("Ошибка при создании элемента:", error);
     }
   });
+
+// JavaScript код для отображения коллекций в таблице
+window.addEventListener("DOMContentLoaded", async () => {
+  try {
+    const collectionTableBody = document.querySelector(
+      "#collection-table tbody"
+    );
+    const collectionNames = await collectionRepository.getAllCollections();
+
+    // Очистка текущих данных в таблице
+    collectionTableBody.innerHTML = "";
+
+    // Добавление строк с данными о коллекциях в таблицу
+    collectionNames.forEach((collectionName, index) => {
+      const row = collectionTableBody.insertRow(index);
+      const cell1 = row.insertCell(0);
+      const cell2 = row.insertCell(1);
+      const cell3 = row.insertCell(2);
+      const cell4 = row.insertCell(3);
+      const cell5 = row.insertCell(4);
+      // Установка данных о коллекции в ячейки таблицы
+      cell1.textContent = index + 1; // Примерный ID, может быть изменен по вашему усмотрению
+      cell2.textContent = collectionName;
+      // Добавьте другие ячейки с данными о коллекции, если нужно
+    });
+  } catch (error) {
+    console.error("Ошибка при получении списка коллекций:", error);
+  }
+});
+//////////////////////////////////

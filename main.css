@@ -46,3 +46,8 @@
   max-width: 300px; /* Максимальная ширина поля ввода */
   margin-bottom: 10px;
 }
+
+.collection-title {
+  text-align: center; /* Выравнивание текста по центру */
+  margin-top: 20px; /* Отступ сверху для выравнивания */
+}
