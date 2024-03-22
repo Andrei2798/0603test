@@ -8,7 +8,7 @@ export default defineConfig({
         index: resolve(__dirname, "index.html"),
         enter: resolve(__dirname, "enter.html"),
         registration: resolve(__dirname, "registration.html"),
-        item: resolve(__dirname, "registration.html"),
+        item: resolve(__dirname, "item.html"),
       },
     },
   },
