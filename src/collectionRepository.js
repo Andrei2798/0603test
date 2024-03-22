@@ -105,6 +105,20 @@ class CollectionRepository {
       console.error("Ошибка при создании элемента:", error);
     }
   }
+  async getItems(collectionName) {
+    try {
+      const collectionRef = collection(this.db, collectionName);
+      const querySnapshot = await getDocs(collectionRef);
+      const items = [];
+      querySnapshot.forEach((doc) => {
+        items.push({ id: doc.id, ...doc.data() });
+      });
+      return items;
+    } catch (error) {
+      console.error("Ошибка при получении элементов коллекции:", error);
+      return [];
+    }
+  }
 }
 
 export const collectionRepository = new CollectionRepository();

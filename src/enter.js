@@ -1,46 +1,37 @@
 import { usersRepository } from "./usersRepository.js";
 localStorage.clear();
 
-const baseUrl = window.location.origin; // Получаем доменное имя, например, "https://example.com"
-const absoluteUrl = baseUrl + "/index.html"; // Добавляем путь к файлу к домену
+const baseUrl = window.location.origin; // Получаем доменное имя
 
-function logIn(event) {
+async function logIn(event) {
   event.preventDefault();
   let name = document.querySelector("#name").value;
   let password = document.querySelector("#password").value;
 
-  // Получаем всех пользователей из базы данных
-  usersRepository
-    .getAll()
-    .then((users) => {
-      // Проверяем каждого пользователя
-      let userFound = false;
-      users.forEach((user) => {
-        if (user.name === name && user.password === password) {
-          // Пользователь найден, аутентификация успешна
-          userFound = true;
-          let userName = document.querySelector("#name").value;
-          localStorage.setItem("isAuthorithed", "true");
-          localStorage.setItem("userName", userName);
-          if (user.status === "admin") {
-            localStorage.setItem("isAdmin", "true");
-          }
-          // Используем относительный путь для перенаправления на главную страницу
-          window.location.href = baseUrl + "/index.html";
-        }
-      });
+  try {
+    const users = await usersRepository.getAll();
+    let userFound = false;
 
-      // Если пользователь не найден, выводим сообщение об ошибке
-      if (!userFound) {
-        document.querySelector("#message").style.color = "red";
-        document.querySelector("#message").innerHTML =
-          "Wrong email or password";
+    users.forEach((user) => {
+      if (user.name === name && user.password === password) {
+        userFound = true;
+        let userName = document.querySelector("#name").value;
+        localStorage.setItem("isAuthorithed", "true");
+        localStorage.setItem("userName", userName);
+        if (user.status === "admin") {
+          localStorage.setItem("isAdmin", "true");
+        }
+        window.location.href = baseUrl + "/index.html";
       }
-    })
-    .catch((error) => {
-      // Обработка ошибок получения пользователей из базы данных, если необходимо
-      console.error("Error fetching users:", error);
     });
+
+    if (!userFound) {
+      document.querySelector("#message").style.color = "red";
+      document.querySelector("#message").innerHTML = "Wrong email or password";
+    }
+  } catch (error) {
+    console.error("Error fetching users:", error);
+  }
 }
 
 document.addEventListener("DOMContentLoaded", function () {

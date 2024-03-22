@@ -72,7 +72,7 @@ document
     let collectionData = {
       id: "",
       tag: "",
-      name: "",
+      name: collectionName,
     };
 
     // Добавляем остальные поля на основе элементов из массива itemsArray
@@ -229,8 +229,9 @@ document
 
       await collectionRepository.createItem(
         collectionName,
-        tag,
         itemName,
+        tag,
+
         itemFields
       );
     } catch (error) {
@@ -267,3 +268,19 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 });
 //////////////////////////////////
+
+// Обработчик события клика на строку таблицы
+document
+  .querySelector("#collection-table tbody")
+  .addEventListener("click", (event) => {
+    // Проверяем, что клик произошел на элементе tr или его дочерних элементах
+    let targetElement = event.target.closest("tr");
+    if (targetElement) {
+      // Получаем название выбранной коллекции из текстового содержимого второй ячейки строки
+      const collectionName = targetElement.cells[1].textContent;
+      // Перенаправляем пользователя на страницу item.html с параметром collectionName в URL
+      window.location.href = `item.html?collection=${encodeURIComponent(
+        collectionName
+      )}`;
+    }
+  });
