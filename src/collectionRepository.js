@@ -6,6 +6,8 @@ import {
   getDoc,
   setDoc,
   doc,
+  query,
+  where,
 } from "firebase/firestore";
 import { app } from "../firebase";
 
@@ -32,9 +34,22 @@ class CollectionRepository {
       if (additionalFields.length > 0) {
         await setDoc(doc(this.metadataCollection, collectionName), {
           additionalFields,
+          topic: collectionData.topic || "", // Добавляем поле topic, если указано, иначе оставляем пустую строку
+          description: collectionData.description || "", // Добавляем поле description, если указано, иначе оставляем пустую строку
+          owner: collectionData.owner,
         });
         console.log(
-          "Дополнительные поля сохранены в Metadata для коллекции",
+          "Дополнительные поля и поля topic и description сохранены в Metadata для коллекции ",
+          collectionName
+        );
+      } else {
+        // Если дополнительных полей нет, просто добавляем поля topic и description в Metadata
+        await setDoc(doc(this.metadataCollection, collectionName), {
+          topic: collectionData.topic || "", // Добавляем поле topic, если указано, иначе оставляем пустую строку
+          description: collectionData.description || "", // Добавляем поле description, если указано, иначе оставляем пустую строку
+        });
+        console.log(
+          "Поля topic и description сохранены в Metadata для коллекции ",
           collectionName
         );
       }
@@ -47,15 +62,37 @@ class CollectionRepository {
     }
   }
 
+  async getCollectionsByOwner(userName) {
+    try {
+      const querySnapshot = await getDocs(
+        query(collection(this.db, "Metadata"), where("owner", "==", userName))
+      );
+      const collections = [];
+      querySnapshot.forEach((doc) => {
+        collections.push({
+          name: doc.id,
+          description: doc.data().description || "",
+          topic: doc.data().topic || "",
+        });
+      });
+      return collections;
+    } catch (error) {
+      console.error("Ошибка при получении коллекций пользователя:", error);
+      throw error;
+    }
+  }
   async getAllCollections() {
     try {
       const querySnapshot = await getDocs(this.metadataCollection);
-      const collectionNames = [];
+      const collections = [];
       querySnapshot.forEach((doc) => {
-        collectionNames.push(doc.id);
+        collections.push({
+          name: doc.id,
+          description: doc.data().description || "", // если нет описания, используем пустую строку
+          topic: doc.data().topic || "", // если нет темы, используем пустую строку
+        });
       });
-      console.log(JSON.stringify(collectionNames));
-      return collectionNames;
+      return collections;
     } catch (error) {
       console.error("Ошибка при получении списка коллекций:", error);
       return [];
@@ -63,28 +100,31 @@ class CollectionRepository {
   }
   async getAdditionalFields(collectionName) {
     try {
-      const docRef = doc(this.metadataCollection, collectionName); // Создание ссылки docRef на документ метаданных для указанной коллекции
-
-      const docSnapshot = await getDoc(docRef); // Получение снимка документа метаданных с использованием getDoc()
+      const docRef = doc(this.metadataCollection, collectionName);
+      const docSnapshot = await getDoc(docRef);
       if (docSnapshot.exists()) {
-        const data = docSnapshot.data(); // получение данных из снимка документа
+        const data = docSnapshot.data();
         if (data && data.additionalFields !== undefined) {
-          console.log("additional fields: " + Object(data.additionalFields));
-          return Object(data.additionalFields);
+          // Исключаем поле 'owner' из списка дополнительных полей
+          const additionalFields = Object(data.additionalFields).filter(
+            (field) => field !== "owner"
+          );
+          console.log("additional fields: " + additionalFields);
+          return additionalFields;
         } else {
           console.error("Дополнительные поля не найдены");
-          return []; // Возвращаем пустой массив, если дополнительные поля отсутствуют
+          return [];
         }
       } else {
         console.error("Документ не найден");
-        return []; // Возвращаем пустой массив, если документ не найден
+        return [];
       }
     } catch (error) {
       console.error(
         "Ошибка при получении дополнительных полей коллекции:",
         error
       );
-      return []; // Возвращаем пустой массив в случае ошибки
+      return [];
     }
   }
 

@@ -1,5 +1,6 @@
 import { usersRepository } from "./usersRepository.js";
 import { collectionRepository } from "./collectionRepository.js";
+import { v4 as uuidv4 } from "uuid";
 
 if (localStorage.getItem("isAuthorithed") == "true") {
   document.querySelector("#logout-button").hidden = false;
@@ -67,12 +68,18 @@ document
     let itemsInput = document.querySelector("#item").value;
 
     let itemsArray = itemsInput.split(",").map((item) => item.trim());
-
+    let userName = localStorage.getItem("userName");
+    let id = Math.random().toString(36).substring(2); // Генерация случайной строки из символов и цифр
+    let topic = document.querySelector("#collection-topic").value;
+    let description = document.querySelector("#collection-description").value;
+    console.log(id);
     // Создаем объект collectionData и добавляем в него стандартные поля
     let collectionData = {
-      id: "",
       tag: "",
       name: collectionName,
+      owner: userName,
+      topic: topic,
+      description: description,
     };
 
     // Добавляем остальные поля на основе элементов из массива itemsArray
@@ -122,25 +129,33 @@ const collectionSelect = document.querySelector("#collection-select");
 // При загрузке страницы заполняем select существующими коллекциями
 window.addEventListener("DOMContentLoaded", async () => {
   try {
-    // Получаем список коллекций
-    const collectionNames = await collectionRepository.getAllCollections();
+    let userName = localStorage.getItem("userName");
+    console.log("userName: " + userName);
+    let userCollections = "";
+    if (localStorage.getItem("iaAdmin") != "true") {
+      userCollections = await collectionRepository.getCollectionsByOwner(
+        userName
+      );
+    } else {
+      userCollections = await collectionRepository.getAllCollections();
+    }
+    // Получаем только те коллекции, у которых owner === userName
 
     // Очищаем текущие опции в элементе select
     collectionSelect.innerHTML = "";
 
     // Добавляем новые опции в элемент select
-    collectionNames.forEach((collectionName) => {
+    userCollections.forEach((collection) => {
       const option = document.createElement("option");
-      option.value = collectionName;
-      option.textContent = collectionName;
+      option.value = collection.name;
+      option.textContent = collection.name;
       collectionSelect.appendChild(option);
     });
   } catch (error) {
     console.error("Ошибка при получении списка коллекций:", error);
   }
 });
-
-collectionRepository.getAdditionalFields("Nasty");
+collectionRepository.getCollectionsByOwner();
 //////////////////////////////////////////////////
 
 // Назначаем обработчик события change выпадающему списку коллекций
@@ -219,6 +234,10 @@ document
       const tag = document.querySelector("#tag").value;
       const itemFields = {};
 
+      // Добавляем автоматически owner из localStorage
+      const owner = localStorage.getItem("userName");
+      itemFields["owner"] = owner;
+
       const additionalFields = await collectionRepository.getAdditionalFields(
         collectionName
       );
@@ -227,12 +246,22 @@ document
         itemFields[field] = fieldValue;
       });
 
+      // Генерация уникального ID для айтема
+      const id = uuidv4();
+
+      const itemData = {
+        id: id,
+        name: itemName,
+        tag: tag,
+        ...itemFields,
+      };
+
+      // Создание нового айтема в базе данных
       await collectionRepository.createItem(
         collectionName,
         itemName,
         tag,
-
-        itemFields
+        itemData
       );
     } catch (error) {
       console.error("Ошибка при создании элемента:", error);
@@ -246,21 +275,24 @@ window.addEventListener("DOMContentLoaded", async () => {
       "#collection-table tbody"
     );
     const collectionNames = await collectionRepository.getAllCollections();
-
+    let description = document.querySelector("#collection-description").value;
     // Очистка текущих данных в таблице
     collectionTableBody.innerHTML = "";
 
     // Добавление строк с данными о коллекциях в таблицу
-    collectionNames.forEach((collectionName, index) => {
+    collectionNames.forEach((collection, index) => {
       const row = collectionTableBody.insertRow(index);
       const cell1 = row.insertCell(0);
       const cell2 = row.insertCell(1);
       const cell3 = row.insertCell(2);
       const cell4 = row.insertCell(3);
       const cell5 = row.insertCell(4);
+      const cell6 = row.insertCell(5);
       // Установка данных о коллекции в ячейки таблицы
-      cell1.textContent = index + 1; // Примерный ID, может быть изменен по вашему усмотрению
-      cell2.textContent = collectionName;
+      cell1.textContent = index + 1;
+      cell2.textContent = collection.name;
+      cell3.textContent = collection.topic; // Вставляем тему коллекции в третью ячейку
+      cell4.textContent = collection.description; // Вставляем описание коллекции в четвертую ячейку
       // Добавьте другие ячейки с данными о коллекции, если нужно
     });
   } catch (error) {
