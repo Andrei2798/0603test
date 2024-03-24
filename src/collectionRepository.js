@@ -8,6 +8,7 @@ import {
   doc,
   query,
   where,
+  deleteDoc,
 } from "firebase/firestore";
 import { app } from "../firebase";
 
@@ -59,6 +60,49 @@ class CollectionRepository {
     } catch (error) {
       console.error("Ошибка при создании коллекции:", error);
       return false; // Возвращаем false в случае ошибки
+    }
+  }
+
+  async getCollectionOwner(collectionName) {
+    try {
+      const docRef = doc(this.metadataCollection, collectionName);
+      const docSnapshot = await getDoc(docRef);
+
+      if (docSnapshot.exists()) {
+        const metadata = docSnapshot.data();
+        const owner = metadata.owner;
+        return owner;
+      } else {
+        console.error("Document does not exist");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error getting owner of collection:", error);
+      throw error;
+    }
+  }
+
+  async deleteCollection(collectionName) {
+    try {
+      // Создаем ссылку на коллекцию
+      const collectionRef = collection(this.db, collectionName);
+
+      // Получаем все документы в коллекции
+      const querySnapshot = await getDocs(collectionRef);
+
+      // Удаляем каждый документ в коллекции
+      querySnapshot.forEach(async (doc) => {
+        await deleteDoc(doc.ref);
+      });
+
+      // Удаляем соответствующий документ из Metadata
+      await deleteDoc(doc(this.metadataCollection, collectionName));
+
+      console.log("Коллекция успешно удалена:", collectionName);
+      return true;
+    } catch (error) {
+      console.error("Ошибка при удалении коллекции:", error);
+      return false;
     }
   }
 

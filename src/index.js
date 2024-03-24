@@ -132,7 +132,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     let userName = localStorage.getItem("userName");
     console.log("userName: " + userName);
     let userCollections = "";
-    if (localStorage.getItem("iaAdmin") != "true") {
+    if (localStorage.getItem("isAdmin") != "true") {
       userCollections = await collectionRepository.getCollectionsByOwner(
         userName
       );
@@ -275,12 +275,25 @@ window.addEventListener("DOMContentLoaded", async () => {
       "#collection-table tbody"
     );
     const collectionNames = await collectionRepository.getAllCollections();
-    let description = document.querySelector("#collection-description").value;
+    const isAdmin = localStorage.getItem("isAdmin");
+    const userName = localStorage.getItem("userName");
+
     // Очистка текущих данных в таблице
     collectionTableBody.innerHTML = "";
 
+    // Функция для получения владельца коллекции
+    const getCollectionOwner = async (collectionName) => {
+      try {
+        return await collectionRepository.getCollectionOwner(collectionName);
+      } catch (error) {
+        console.error("Ошибка при получении владельца коллекции:", error);
+        return null;
+      }
+    };
+
     // Добавление строк с данными о коллекциях в таблицу
-    collectionNames.forEach((collection, index) => {
+    for (let index = 0; index < collectionNames.length; index++) {
+      const collection = collectionNames[index];
       const row = collectionTableBody.insertRow(index);
       const cell1 = row.insertCell(0);
       const cell2 = row.insertCell(1);
@@ -291,28 +304,66 @@ window.addEventListener("DOMContentLoaded", async () => {
       // Установка данных о коллекции в ячейки таблицы
       cell1.textContent = index + 1;
       cell2.textContent = collection.name;
-      cell3.textContent = collection.topic; // Вставляем тему коллекции в третью ячейку
-      cell4.textContent = collection.description; // Вставляем описание коллекции в четвертую ячейку
-      // Добавьте другие ячейки с данными о коллекции, если нужно
-    });
+      cell3.textContent = collection.topic;
+      cell4.textContent = collection.description;
+
+      // Получение владельца коллекции
+      const owner = await getCollectionOwner(collection.name);
+
+      // Проверка прав доступа для отображения кнопки удаления
+      const isOwner = userName === owner;
+      const showDeleteButton = isAdmin === "true" || isOwner;
+
+      // Добавление кнопки удаления коллекции в последнюю ячейку строки
+      const deleteButton = document.createElement("button");
+      deleteButton.textContent = "Delete";
+      deleteButton.classList.add("btn", "btn-danger");
+      deleteButton.hidden = !showDeleteButton;
+      cell6.appendChild(deleteButton);
+
+      document
+        .querySelector("#logout-button")
+        .addEventListener("click", function () {
+          deleteButton.hidden = true;
+        });
+
+      const viewButton = document.createElement("button");
+      viewButton.textContent = "View";
+      viewButton.classList.add("btn", "btn-primary");
+      cell6.appendChild(viewButton);
+
+      // Обработчик события клика на кнопку удаления коллекции
+      deleteButton.addEventListener("click", async (event) => {
+        event.stopPropagation(); // Остановка всплытия события, чтобы не срабатывал клик на строке
+
+        try {
+          const collectionNameToDelete = collection.name;
+          const deleted = await collectionRepository.deleteCollection(
+            collectionNameToDelete
+          );
+          if (deleted) {
+            // Удаляем строку из таблицы
+            row.remove();
+          }
+        } catch (error) {
+          console.error("Ошибка при удалении коллекции:", error);
+        }
+      });
+
+      viewButton.addEventListener("click", function () {
+        // Получаем название выбранной коллекции
+        const collectionName = collection.name;
+
+        // Формируем URL для перехода на страницу item.html с параметром collectionName в URL
+        const url = `item.html?collection=${encodeURIComponent(
+          collectionName
+        )}`;
+
+        // Перенаправляем пользователя на страницу item.html
+        window.location.href = url;
+      });
+    }
   } catch (error) {
     console.error("Ошибка при получении списка коллекций:", error);
   }
 });
-//////////////////////////////////
-
-// Обработчик события клика на строку таблицы
-document
-  .querySelector("#collection-table tbody")
-  .addEventListener("click", (event) => {
-    // Проверяем, что клик произошел на элементе tr или его дочерних элементах
-    let targetElement = event.target.closest("tr");
-    if (targetElement) {
-      // Получаем название выбранной коллекции из текстового содержимого второй ячейки строки
-      const collectionName = targetElement.cells[1].textContent;
-      // Перенаправляем пользователя на страницу item.html с параметром collectionName в URL
-      window.location.href = `item.html?collection=${encodeURIComponent(
-        collectionName
-      )}`;
-    }
-  });
