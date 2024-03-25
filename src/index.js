@@ -7,6 +7,7 @@ if (localStorage.getItem("isAuthorithed") == "true") {
   document.querySelector("#enter-button").hidden = true;
   document.querySelector("#registration-button").hidden = true;
   document.querySelector("#create-collection-btn").hidden = false;
+
   getUserName();
 } else {
   document.querySelector("#logout-button").hidden = true;
@@ -34,6 +35,12 @@ function exit() {
   document.querySelector("#create-collection-btn").hidden = true;
   document.querySelector("#create-collection-form").hidden = true;
   document.querySelector("#create-item-form").hidden = true;
+  document.querySelector("#user-list").hidden = true;
+
+  const deleteButtons = document.querySelectorAll(".btn-danger");
+  deleteButtons.forEach((button) => {
+    button.hidden = true;
+  });
 }
 
 document.querySelector("#logout-button").addEventListener("click", exit);

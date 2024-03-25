@@ -61,3 +61,7 @@
 .table {
   border: 10px solid #dee2e6; /* Цвет границы ячеек */
 }
+
+footer {
+  background-color: rgb(10, 10, 73);
+}

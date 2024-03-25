@@ -62,16 +62,24 @@ function createTableBody(users, headers) {
   const tbody = document.createElement("tbody");
   users.forEach((user) => {
     const userRow = createUserRow(user, headers);
-    const deleteButton = createButton("Delete", "btn-danger", () =>
-      deleteUser(user)
-    );
+
+    // Создаем ячейки для кнопок "Delete" и "Block"
+    const deleteButton = createButton("Delete", "btn-danger", async (event) => {
+      event.stopPropagation(); // Остановка всплытия события, чтобы не срабатывал клик на строке
+      try {
+        await usersRepository.delete(String(user.id));
+        await renderUserList(); // После удаления пользователя обновляем список пользователей
+      } catch (error) {
+        console.error("Error deleting user:", error);
+      }
+    });
     const blockButton = createButton("Block", "btn-warning", () =>
       blockUser(user)
     );
     const deleteCell = createTableCell(deleteButton);
     const blockCell = createTableCell(blockButton);
 
-    // Добавляем кнопки в конец строки пользователя
+    // Добавляем ячейки с кнопками "Delete" и "Block" в конец строки пользователя
     userRow.appendChild(deleteCell);
     userRow.appendChild(blockCell);
 
@@ -79,6 +87,9 @@ function createTableBody(users, headers) {
   });
   return tbody;
 }
+
+// Вызов createTableBody
+createTableBody(users, headers, usersRepository);
 
 function createTableCell(element) {
   const cell = document.createElement("td");
@@ -100,9 +111,33 @@ function createButton(text, className, clickHandler) {
   const button = document.createElement("button");
   button.textContent = text;
   button.classList.add("btn", className);
-  button.addEventListener("click", clickHandler);
+  button.addEventListener("click", (event) => clickHandler(event));
   return button;
 }
 function getUsersHeaders(users) {
   return users.length > 0 ? Object.keys(users[0]) : [];
+}
+
+// Назначаем обработчик события клика на кнопки удаления
+document.querySelectorAll(".delete-user-btn").forEach((btn) => {
+  btn.addEventListener("click", async (event) => {
+    event.stopPropagation(); // Остановка всплытия события, чтобы не срабатывал клик на строке
+    const userId = btn.dataset.id;
+    try {
+      await usersRepository.delete(userId);
+      await renderUserList(); // После удаления пользователя обновляем список пользователей
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    }
+  });
+});
+
+try {
+  const users = await usersRepository.getAll();
+  users.forEach((user) => {
+    console.log("User ID:", user.id);
+    // Здесь вы можете выполнить дополнительные действия с id пользователями, например, отобразить их на странице
+  });
+} catch (error) {
+  console.error("Error fetching users:", error);
 }
