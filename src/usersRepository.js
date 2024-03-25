@@ -5,6 +5,8 @@ import {
   deleteDoc,
   doc,
   getDocs,
+  query,
+  where,
 } from "firebase/firestore";
 import { app } from "../firebase";
 
@@ -24,16 +26,9 @@ export class UsersRepository {
     }
   }
 
-  async delete(id) {
-    try {
-      console.log("Deleting user with ID:", id);
-      await deleteDoc(doc(this.db, this.collectionName, id));
-      console.log("The user has been successfully deleted!");
-      return true; // Возвращаем true, чтобы показать, что удаление прошло успешно
-    } catch (e) {
-      console.error("Error removing document: ", e);
-      return false; // Возвращаем false, чтобы показать, что удаление не удалось
-    }
+  async deleteUser(id) {
+    let result = await this.getUserReference(id);
+    await deleteDoc(doc(this.db, this.collectionName, result));
   }
 
   async deleteMany(ids) {
@@ -44,6 +39,25 @@ export class UsersRepository {
       console.log("Documents successfully deleted!");
     } catch (e) {
       console.error("Error removing documents: ", e);
+    }
+  }
+
+  async getUserReference(id) {
+    try {
+      const querySnapshot = await getDocs(
+        collection(this.db, this.collectionName) // массив объектов Users
+      );
+      const userDoc = querySnapshot.docs.find((doc) => doc.data().id == id); // объект с нужным id
+      if (userDoc) {
+        console.log("User ID from Firestore:", userDoc.id);
+        return userDoc.id;
+      } else {
+        console.log("User with ID", id, "not found in Firestore");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error getting user ID from Firestore:", error);
+      return null;
     }
   }
 
