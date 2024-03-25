@@ -38,20 +38,6 @@ function exit() {
 
 document.querySelector("#logout-button").addEventListener("click", exit);
 
-const showUsersButton = document.querySelector("#show-users-btn");
-if (showUsersButton) {
-  showUsersButton.addEventListener("click", async () => {
-    try {
-      // Получаем список пользователей и обновляем интерфейс
-      const users = await usersRepository.getAll();
-      renderUserList(users);
-    } catch (error) {
-      console.error("Error fetching users:", error);
-    }
-  });
-} else {
-  console.error("Element with id 'show-users-btn' not found.");
-}
 ///////////////////////////////////////////////////////////////////
 document
   .querySelector("#create-collection-btn")
@@ -295,60 +281,29 @@ window.addEventListener("DOMContentLoaded", async () => {
     for (let index = 0; index < collectionNames.length; index++) {
       const collection = collectionNames[index];
       const row = collectionTableBody.insertRow(index);
+      // Установка данных о коллекции в ячейки таблицы
       const cell1 = row.insertCell(0);
+      cell1.textContent = index + 1;
       const cell2 = row.insertCell(1);
+      cell2.textContent = collection.name;
       const cell3 = row.insertCell(2);
+      cell3.textContent = collection.description;
       const cell4 = row.insertCell(3);
+      cell4.textContent = collection.topic;
       const cell5 = row.insertCell(4);
       const cell6 = row.insertCell(5);
-      // Установка данных о коллекции в ячейки таблицы
-      cell1.textContent = index + 1;
-      cell2.textContent = collection.name;
-      cell3.textContent = collection.topic;
-      cell4.textContent = collection.description;
 
       // Получение владельца коллекции
       const owner = await getCollectionOwner(collection.name);
 
-      // Проверка прав доступа для отображения кнопки удаления
+      // Проверка прав доступа для отображения кнопок
       const isOwner = userName === owner;
-      const showDeleteButton = isAdmin === "true" || isOwner;
-
-      // Добавление кнопки удаления коллекции в последнюю ячейку строки
-      const deleteButton = document.createElement("button");
-      deleteButton.textContent = "Delete";
-      deleteButton.classList.add("btn", "btn-danger");
-      deleteButton.hidden = !showDeleteButton;
-      cell6.appendChild(deleteButton);
-
-      document
-        .querySelector("#logout-button")
-        .addEventListener("click", function () {
-          deleteButton.hidden = true;
-        });
+      const showButtons = isAdmin === "true" || isOwner;
 
       const viewButton = document.createElement("button");
       viewButton.textContent = "View";
       viewButton.classList.add("btn", "btn-primary");
       cell6.appendChild(viewButton);
-
-      // Обработчик события клика на кнопку удаления коллекции
-      deleteButton.addEventListener("click", async (event) => {
-        event.stopPropagation(); // Остановка всплытия события, чтобы не срабатывал клик на строке
-
-        try {
-          const collectionNameToDelete = collection.name;
-          const deleted = await collectionRepository.deleteCollection(
-            collectionNameToDelete
-          );
-          if (deleted) {
-            // Удаляем строку из таблицы
-            row.remove();
-          }
-        } catch (error) {
-          console.error("Ошибка при удалении коллекции:", error);
-        }
-      });
 
       viewButton.addEventListener("click", function () {
         // Получаем название выбранной коллекции
@@ -362,6 +317,34 @@ window.addEventListener("DOMContentLoaded", async () => {
         // Перенаправляем пользователя на страницу item.html
         window.location.href = url;
       });
+
+      // Добавление кнопок в последние ячейки строки
+      if (showButtons) {
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete";
+        deleteButton.classList.add("btn", "btn-danger");
+        cell5.appendChild(deleteButton);
+
+        // Обработчик события клика на кнопку удаления коллекции
+        deleteButton.addEventListener("click", async (event) => {
+          event.stopPropagation(); // Остановка всплытия события, чтобы не срабатывал клик на строке
+
+          try {
+            const collectionNameToDelete = collection.name;
+            const deleted = await collectionRepository.deleteCollection(
+              collectionNameToDelete
+            );
+            if (deleted) {
+              // Удаляем строку из таблицы
+              row.remove();
+            }
+          } catch (error) {
+            console.error("Ошибка при удалении коллекции:", error);
+          }
+        });
+
+        // Обработчик события клика на кнопку просмотра коллекции
+      }
     }
   } catch (error) {
     console.error("Ошибка при получении списка коллекций:", error);
