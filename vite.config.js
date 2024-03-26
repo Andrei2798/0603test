@@ -7,7 +7,7 @@ export default defineConfig({
     outDir: "dist",
     rollupOptions: {
       input: {
-        index: resolve("src/users.js"),
+        users: resolve("src/users.js"),
         item: resolve("src/item.js"),
         index: resolve("src/index.js"),
         enter: resolve("src/enter.js"),
@@ -15,7 +15,7 @@ export default defineConfig({
       },
     },
     esbuildOptions: {
-      target: "es2019",
+      target: "esnext", // или "es2020"
     },
   },
 });
