@@ -14,5 +14,8 @@ export default defineConfig({
         registration: resolve(__dirname, "registration.html"),
       },
     },
+    esbuildOptions: {
+      target: "es2019",
+    },
   },
 });

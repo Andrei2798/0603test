@@ -26,10 +26,10 @@ export class UsersRepository {
     }
   }
 
-  async deleteUser(id) {
-    let result = await this.getUserReference(id);
-    await deleteDoc(doc(this.db, this.collectionName, result));
-  }
+  // async deleteUser(id) {
+  //   let result = await this.getUserReference(id);
+  //   await deleteDoc(doc(this.db, this.collectionName, result));
+  // }
 
   async deleteMany(ids) {
     try {
@@ -42,27 +42,27 @@ export class UsersRepository {
     }
   }
 
-  async getUserReference(id) {
-    try {
-      const querySnapshot = await getDocs(
-        collection(this.db, this.collectionName)
-      );
-      const results = await Promise.all(
-        querySnapshot.docs.map(async (doc) => {
-          const userData = doc.data();
-          if (userData.id == id) {
-            console.log("User ID from Firestore:", doc.id);
-            return doc.id;
-          }
-        })
-      );
-      console.log(results);
-      return results.find((id) => id !== undefined) || null;
-    } catch (error) {
-      console.error("Error getting user ID from Firestore:", error);
-      return null;
-    }
-  }
+  // async getUserReference(id) {
+  //   try {
+  //     const querySnapshot = await getDocs(
+  //       collection(this.db, this.collectionName)
+  //     );
+  //     const results = await Promise.all(
+  //       querySnapshot.docs.map(async (doc) => {
+  //         const userData = doc.data();
+  //         if (userData.id == id) {
+  //           console.log("User ID from Firestore:", doc.id);
+  //           return doc.id;
+  //         }
+  //       })
+  //     );
+  //     console.log(results);
+  //     return results.find((id) => id !== undefined) || null;
+  //   } catch (error) {
+  //     console.error("Error getting user ID from Firestore:", error);
+  //     return null;
+  //   }
+  // }
 
   async getAll() {
     const usersSnapshot = await getDocs(
