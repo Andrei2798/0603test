@@ -3,10 +3,11 @@ import { resolve } from "path";
 
 export default defineConfig({
   build: {
-    target: "es2019",
+    target: "esnext",
     outDir: "dist",
     rollupOptions: {
       input: {
+        index: resolve("src/users.js"),
         item: resolve("src/item.js"),
         index: resolve("src/index.js"),
         enter: resolve("src/enter.js"),
