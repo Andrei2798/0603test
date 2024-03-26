@@ -7,7 +7,7 @@ export default defineConfig({
     outDir: "dist",
     rollupOptions: {
       input: {
-        users: resolve("src/users.js"),
+        // users: resolve("src/users.js"),
         item: resolve("src/item.js"),
         index: resolve("src/index.js"),
         enter: resolve("src/enter.js"),
