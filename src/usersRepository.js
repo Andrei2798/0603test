@@ -31,16 +31,16 @@ export class UsersRepository {
     await deleteDoc(doc(this.db, this.collectionName, result));
   }
 
-  async deleteMany(ids) {
-    try {
-      ids.forEach(async (id) => {
-        await deleteDoc(doc(this.db, this.collectionName, id));
-      });
-      console.log("Documents successfully deleted!");
-    } catch (e) {
-      console.error("Error removing documents: ", e);
-    }
-  }
+  // async deleteMany(ids) {
+  //   try {
+  //     ids.forEach(async (id) => {
+  //       await deleteDoc(doc(this.db, this.collectionName, id));
+  //     });
+  //     console.log("Documents successfully deleted!");
+  //   } catch (e) {
+  //     console.error("Error removing documents: ", e);
+  //   }
+  // }
 
   async getUserReference(id) {
     try {
