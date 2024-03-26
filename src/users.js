@@ -73,8 +73,10 @@ function createTableBody(users, headers) {
         console.error("Error deleting user:", error);
       }
     });
-    const blockButton = createButton("Block", "btn-warning", () =>
-      blockUser(user)
+    const blockButton = createButton(
+      "Block",
+      "btn-warning",
+      async () => await usersRepository.blockUser(String(user.id))
     );
     const deleteCell = createTableCell(deleteButton);
     const blockCell = createTableCell(blockButton);

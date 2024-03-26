@@ -5,8 +5,10 @@ import {
   deleteDoc,
   doc,
   getDocs,
+  updateDoc,
   query,
   where,
+  connectFirestoreEmulator,
 } from "firebase/firestore";
 import { app } from "../firebase";
 
@@ -31,6 +33,23 @@ export class UsersRepository {
     await deleteDoc(doc(this.db, this.collectionName, result));
   }
 
+  async blockUser(id) {
+    try {
+      // Добавлен блок try
+      let result = await this.getUserReference(id);
+      if (!result) {
+        console.log("User not found in Firestore");
+        return;
+      }
+      const userRef = doc(this.db, this.collectionName, result);
+      await updateDoc(userRef, { status: "blocked" });
+      console.log("User successfully blocked!");
+    } catch (error) {
+      // Перемещен блок catch внутрь try
+      console.error("Error blocking user:", error);
+    }
+  }
+
   // async deleteMany(ids) {
   //   try {
   //     ids.forEach(async (id) => {
@@ -45,7 +64,8 @@ export class UsersRepository {
   async getUserReference(id) {
     try {
       const querySnapshot = await getDocs(
-        collection(this.db, this.collectionName)
+        // документы коллекции
+        collection(this.db, this.collectionName) // коллекция
       );
       const results = await Promise.all(
         querySnapshot.docs.map(async (doc) => {
