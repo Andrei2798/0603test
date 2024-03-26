@@ -67,7 +67,7 @@ function createTableBody(users, headers) {
     const deleteButton = createButton("Delete", "btn-danger", async (event) => {
       event.stopPropagation(); // Остановка всплытия события, чтобы не срабатывал клик на строке
       try {
-        await usersRepository.deleteUser(String(user.id));
+        // await usersRepository.deleteUser(String(user.id));
         await renderUserList(); // После удаления пользователя обновляем список пользователей
       } catch (error) {
         console.error("Error deleting user:", error);
