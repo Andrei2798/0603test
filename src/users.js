@@ -46,8 +46,10 @@ function createTableHeader(headers) {
   });
   const deleteHeaderCell = createHeaderCell("Delete");
   const blockHeaderCell = createHeaderCell("Block");
+  const unblockHeaderCell = createHeaderCell("Unblock");
   headerRow.appendChild(deleteHeaderCell);
   headerRow.appendChild(blockHeaderCell);
+  headerRow.appendChild(unblockHeaderCell);
   thead.appendChild(headerRow);
   return thead;
 }
@@ -73,18 +75,21 @@ function createTableBody(users, headers) {
         console.error("Error deleting user:", error);
       }
     });
-    const blockButton = createButton(
-      "Block",
-      "btn-warning",
-      async () => await usersRepository.blockUser(String(user.id))
-    );
+    const unblockButton = createButton("Unblock", "btn-success", async () => {
+      await usersRepository.unblockUser(String(user.id));
+    });
+
+    const blockButton = createButton("Block", "btn-warning", async () => {
+      await usersRepository.blockUser(String(user.id));
+    });
     const deleteCell = createTableCell(deleteButton);
     const blockCell = createTableCell(blockButton);
+    const unblockCell = createTableCell(unblockButton);
 
     // Добавляем ячейки с кнопками "Delete" и "Block" в конец строки пользователя
     userRow.appendChild(deleteCell);
     userRow.appendChild(blockCell);
-
+    userRow.appendChild(unblockCell);
     tbody.appendChild(userRow);
   });
   return tbody;

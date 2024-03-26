@@ -16,7 +16,6 @@ async function logIn(event) {
       if (user.name === name && user.password === password) {
         userFound = true;
         if (user.status != "blocked") {
-          userFound = true;
           let userName = document.querySelector("#name").value;
           localStorage.setItem("isAuthorithed", "true");
           localStorage.setItem("userName", userName);
@@ -37,10 +36,6 @@ async function logIn(event) {
       document.querySelector("#message").style.color = "red";
       document.querySelector("#message").innerHTML = "Wrong email or password";
     }
-    // if ((user.status = "blocked")) {
-    //   document.querySelector("#message").style.color = "red";
-    //   document.querySelector("#message").innerHTML = "The user is blocked";
-    // }
   } catch (error) {
     console.error("Error fetching users:", error);
   }
