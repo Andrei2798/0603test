@@ -6,7 +6,7 @@ export default defineConfig({
     outDir: "dist",
     rollupOptions: {
       input: {
-        index: resolve(__dirname, "index.html"),
+        users: resolve(__dirname, "index.html"),
         item: resolve(__dirname, "item.html"),
         index: resolve(__dirname, "index.html"),
         enter: resolve(__dirname, "enter.html"),
