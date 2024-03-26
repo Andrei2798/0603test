@@ -7,11 +7,10 @@ export default defineConfig({
     outDir: "dist",
     rollupOptions: {
       input: {
-        users: resolve(__dirname, "index.html"),
-        item: resolve(__dirname, "item.html"),
-        index: resolve(__dirname, "index.html"),
-        enter: resolve(__dirname, "enter.html"),
-        registration: resolve(__dirname, "registration.html"),
+        item: resolve("src/item.js"),
+        index: resolve("src/index.js"),
+        enter: resolve("src/enter.js"),
+        registration: resolve("src/registration.js"),
       },
     },
     esbuildOptions: {
