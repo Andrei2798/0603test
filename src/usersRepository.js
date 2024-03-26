@@ -42,19 +42,41 @@ export class UsersRepository {
     }
   }
 
+  // async getUserReference(id) {
+  //   try {
+  //     const querySnapshot = await getDocs(
+  //       collection(this.db, this.collectionName) // массив объектов Users
+  //     );
+  //     const userDoc = querySnapshot.docs.find((doc) => doc.data().id == id); // объект с нужным id
+  //     if (userDoc) {
+  //       console.log("User ID from Firestore:", userDoc.id);
+  //       return userDoc.id;
+  //     } else {
+  //       console.log("User with ID", id, "not found in Firestore");
+  //       return null;
+  //     }
+  //   } catch (error) {
+  //     console.error("Error getting user ID from Firestore:", error);
+  //     return null;
+  //   }
+  // }
+
   async getUserReference(id) {
     try {
       const querySnapshot = await getDocs(
-        collection(this.db, this.collectionName) // массив объектов Users
+        collection(this.db, this.collectionName)
       );
-      const userDoc = querySnapshot.docs.find((doc) => doc.data().id == id); // объект с нужным id
-      if (userDoc) {
-        console.log("User ID from Firestore:", userDoc.id);
-        return userDoc.id;
-      } else {
-        console.log("User with ID", id, "not found in Firestore");
-        return null;
-      }
+      const results = await Promise.all(
+        querySnapshot.docs.map(async (doc) => {
+          const userData = doc.data();
+          if (userData.id == id) {
+            console.log("User ID from Firestore:", doc.id);
+            return doc.id;
+          }
+        })
+      );
+      console.log(results);
+      return results.find((id) => id !== undefined) || null;
     } catch (error) {
       console.error("Error getting user ID from Firestore:", error);
       return null;
