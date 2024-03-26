@@ -45,7 +45,6 @@ export class UsersRepository {
       await updateDoc(userRef, { status: "blocked" });
       console.log("User successfully blocked!");
     } catch (error) {
-      // Перемещен блок catch внутрь try
       console.error("Error blocking user:", error);
     }
   }

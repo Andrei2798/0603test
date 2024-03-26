@@ -1,4 +1,5 @@
 import { doc } from "firebase/firestore";
+
 import { usersRepository } from "./usersRepository.js";
 
 const showUsersButton = document.querySelector("#show-users-btn");
@@ -77,10 +78,12 @@ function createTableBody(users, headers) {
     });
     const unblockButton = createButton("Unblock", "btn-success", async () => {
       await usersRepository.unblockUser(String(user.id));
+      await renderUserList();
     });
 
     const blockButton = createButton("Block", "btn-warning", async () => {
       await usersRepository.blockUser(String(user.id));
+      await renderUserList();
     });
     const deleteCell = createTableCell(deleteButton);
     const blockCell = createTableCell(blockButton);
