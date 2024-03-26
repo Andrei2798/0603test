@@ -3,6 +3,7 @@ import { resolve } from "path";
 
 export default defineConfig({
   build: {
+    target: "es2019",
     outDir: "dist",
     rollupOptions: {
       input: {
