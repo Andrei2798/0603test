@@ -106,6 +106,47 @@ class CollectionRepository {
     }
   }
 
+  async deleteItem(collectionName, itemId) {
+    try {
+      // Проверяем, передан ли корректный идентификатор элемента
+      if (!itemId) {
+        console.error("Ошибка: Не указан идентификатор элемента");
+        return false;
+      }
+
+      // Создаем ссылку на коллекцию
+      const collectionRef = collection(this.db, collectionName);
+
+      // Получаем документ с указанным идентификатором
+      const querySnapshot = await getDocs(
+        query(collectionRef, where("id", "==", itemId))
+      );
+
+      // Проверяем, найден ли документ
+      if (querySnapshot.empty) {
+        console.error(
+          `Ошибка: Документ с ID ${itemId} в коллекции ${collectionName} не найден`
+        );
+        return false;
+      }
+
+      // Удаляем найденный документ
+      const docSnapshot = querySnapshot.docs[0]; // Предполагаем, что найдется только один документ
+      await deleteDoc(doc(docSnapshot.ref.parent, docSnapshot.id));
+
+      console.log(
+        `Элемент с ID ${itemId} успешно удален из коллекции ${collectionName}`
+      );
+      return true;
+    } catch (error) {
+      console.error(
+        `Ошибка при удалении элемента из коллекции ${collectionName}:`,
+        error
+      );
+      return false;
+    }
+  }
+
   async getCollectionsByOwner(userName) {
     try {
       const querySnapshot = await getDocs(
@@ -189,6 +230,7 @@ class CollectionRepository {
       console.error("Ошибка при создании элемента:", error);
     }
   }
+
   async getItems(collectionName) {
     try {
       const collectionRef = collection(this.db, collectionName);

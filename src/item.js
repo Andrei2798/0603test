@@ -1,10 +1,14 @@
 import { collectionRepository } from "./collectionRepository.js";
 
+const urlParams = new URLSearchParams(window.location.search);
+const collectionName = urlParams.get("collection");
+
 window.addEventListener("DOMContentLoaded", async () => {
   try {
     // Получаем название выбранной коллекции из URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const collectionName = urlParams.get("collection");
+
+    // Выводим название коллекции в консоль
+    console.log(`Текущая коллекция: ${collectionName}`);
 
     // Запрашиваем данные об элементах выбранной коллекции
     const collectionItems = await collectionRepository.getItems(collectionName);
@@ -34,42 +38,91 @@ window.addEventListener("DOMContentLoaded", async () => {
 
 function renderCollectionItems(collectionItems) {
   const container = document.querySelector("#items-container");
-  if (container) {
-    // Очищаем содержимое контейнера перед добавлением новых элементов
-    container.innerHTML = "";
-
-    // Создаем таблицу с классами Bootstrap для стилизации
-    const table = document.createElement("table");
-    table.classList.add("table", "table-striped", "table-hover");
-
-    // Создаем заголовок таблицы с классом Bootstrap
-    const thead = document.createElement("thead");
-    thead.classList.add("thead-dark");
-    const headerRow = document.createElement("tr");
-    Object.keys(collectionItems[0]).forEach((key) => {
-      const headerCell = document.createElement("th");
-      headerCell.textContent = key;
-      headerRow.appendChild(headerCell);
-    });
-    thead.appendChild(headerRow);
-    table.appendChild(thead);
-
-    // Создаем строки с данными элементов с классом Bootstrap
-    const tbody = document.createElement("tbody");
-    collectionItems.forEach((item) => {
-      const row = document.createElement("tr");
-      Object.values(item).forEach((value) => {
-        const cell = document.createElement("td");
-        cell.textContent = value;
-        row.appendChild(cell);
-      });
-      tbody.appendChild(row);
-    });
-    table.appendChild(tbody);
-
-    // Добавляем таблицу в контейнер
-    container.appendChild(table);
-  } else {
+  if (!container) {
     console.error("Контейнер не найден");
+    return;
   }
+
+  container.innerHTML = "";
+  const table = createTable(collectionItems);
+  container.appendChild(table);
+}
+
+function createTable(collectionItems) {
+  const table = document.createElement("table");
+  table.classList.add("table", "table-striped", "table-hover");
+  const fieldsOrder = getFieldOrder(collectionItems);
+
+  table.appendChild(createTableHeader(fieldsOrder));
+  table.appendChild(createTableBody(collectionItems, fieldsOrder));
+
+  return table;
+}
+
+function getFieldOrder(collectionItems) {
+  if (!collectionItems || collectionItems.length === 0) {
+    return [];
+  }
+  return Object.keys(collectionItems[0]);
+}
+
+function createTableHeader(fieldsOrder) {
+  const thead = document.createElement("thead");
+  thead.classList.add("thead-dark");
+  const headerRow = document.createElement("tr");
+  fieldsOrder.forEach((key) => {
+    const headerCell = document.createElement("th");
+    headerCell.textContent = key;
+    headerRow.appendChild(headerCell);
+  });
+  thead.appendChild(headerRow);
+  return thead;
+}
+
+function createTableBody(collectionItems, fieldsOrder) {
+  const tbody = document.createElement("tbody");
+  collectionItems.forEach((item) => {
+    const row = createTableRow(item, fieldsOrder);
+    tbody.appendChild(row);
+  });
+  return tbody;
+}
+
+function createTableRow(item, fieldsOrder) {
+  const row = document.createElement("tr");
+  fieldsOrder.forEach((key) => {
+    const cell = document.createElement("td");
+    cell.textContent = item[key] || ""; // handle missing data gracefully
+    row.appendChild(cell);
+  });
+
+  // Создаем кнопку удаления элемента и добавляем обработчик события
+  const deleteButtonCell = document.createElement("td");
+  const deleteButton = document.createElement("button");
+  deleteButton.textContent = "Delete";
+  deleteButton.classList.add("btn", "btn-danger");
+  deleteButton.addEventListener("click", async () => {
+    try {
+      const itemId = item.id;
+      console.log(collectionName);
+      console.log(itemId);
+      const deleted = await collectionRepository.deleteItem(
+        collectionName,
+        itemId
+      );
+      if (deleted) {
+        row.remove(); // Удаляем строку из таблицы
+
+        console.log("Элемент успешно удален.");
+      } else {
+        console.log("Не удалось удалить элемент.");
+      }
+    } catch (error) {
+      console.error("Ошибка при удалении элемента:", error);
+    }
+  });
+  deleteButtonCell.appendChild(deleteButton);
+  row.appendChild(deleteButtonCell);
+
+  return row;
 }
