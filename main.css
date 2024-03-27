@@ -1,12 +1,16 @@
 /* Дополнительные стили */
 .header {
-  background-color: yellow; /* Желтый цвет для хедера */
+  background-color: #ffed00; /* Желтый цвет для хедера */
 }
 
 .header .container {
   display: flex;
   justify-content: space-between; /* Расположение элементов по краям */
   align-items: center; /* Выравнивание по центру по вертикали */
+}
+
+main {
+  min-height: 500px;
 }
 .search-form {
   display: flex;
@@ -59,9 +63,42 @@
 }
 
 .table {
-  border: 10px solid #dee2e6; /* Цвет границы ячеек */
+  border: 3px solid black; /* Цвет границы ячеек */
 }
 
-footer {
-  background-color: rgb(10, 10, 73);
+.footer {
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #005495; /* Цвет фона футера */
+  color: #fff; /* Цвет текста в футере */
+  text-align: center;
+  padding: 20px 0; /* Отступы внутри футера */
+}
+
+#collection-table td,
+#collection-table th {
+  border: 1px solid black; /* Устанавливаем черную границу для ячеек таблицы */
+  padding: 8px; /* Добавляем отступ внутри ячеек */
+}
+
+#collection-table {
+  background-color: #5cb85c;
+}
+
+#collection-table th {
+  background-color: #189c3e; /* Устанавливаем фон для заголовков таблицы */
+}
+
+/* Стили для кнопок в ячейках таблицы */
+#collection-table .btn {
+  margin-right: 5px; /* Добавляем небольшой отступ между кнопками */
+}
+
+.list-group mt-4 {
+  margin-bottom: 15px;
+}
+
+.footer-text {
+  color: white; /* Замените #your-desired-color на желаемый цвет */
 }

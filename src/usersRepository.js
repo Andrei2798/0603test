@@ -66,6 +66,23 @@ export class UsersRepository {
     }
   }
 
+  async makeAdmin(id) {
+    try {
+      // Добавлен блок try
+      let result = await this.getUserReference(id);
+      if (!result) {
+        console.log("User not found in Firestore");
+        return;
+      }
+      const userRef = doc(this.db, this.collectionName, result);
+      await updateDoc(userRef, { status: "admin" });
+      console.log("User successfully blocked!");
+    } catch (error) {
+      // Перемещен блок catch внутрь try
+      console.error("Error blocking user:", error);
+    }
+  }
+
   // async deleteMany(ids) {
   //   try {
   //     ids.forEach(async (id) => {

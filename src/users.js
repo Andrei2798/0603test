@@ -48,9 +48,11 @@ function createTableHeader(headers) {
   const deleteHeaderCell = createHeaderCell("Delete");
   const blockHeaderCell = createHeaderCell("Block");
   const unblockHeaderCell = createHeaderCell("Unblock");
+  const makeAdminCell = createHeaderCell("MakeAdmin");
   headerRow.appendChild(deleteHeaderCell);
   headerRow.appendChild(blockHeaderCell);
   headerRow.appendChild(unblockHeaderCell);
+  headerRow.appendChild(makeAdminCell);
   thead.appendChild(headerRow);
   return thead;
 }
@@ -71,7 +73,7 @@ function createTableBody(users, headers) {
       event.stopPropagation(); // Остановка всплытия события, чтобы не срабатывал клик на строке
       try {
         await usersRepository.deleteUser(String(user.id));
-        await renderUserList(); // После удаления пользователя обновляем список пользователей
+        await renderUserList();
       } catch (error) {
         console.error("Error deleting user:", error);
       }
@@ -85,20 +87,25 @@ function createTableBody(users, headers) {
       await usersRepository.blockUser(String(user.id));
       await renderUserList();
     });
+
+    const adminButton = createButton("Make admin", "btn-success", async () => {
+      await usersRepository.makeAdmin(String(user.id));
+      await renderUserList();
+    });
     const deleteCell = createTableCell(deleteButton);
     const blockCell = createTableCell(blockButton);
     const unblockCell = createTableCell(unblockButton);
+    const makeAdminCell = createTableCell(adminButton);
 
-    // Добавляем ячейки с кнопками "Delete" и "Block" в конец строки пользователя
     userRow.appendChild(deleteCell);
     userRow.appendChild(blockCell);
     userRow.appendChild(unblockCell);
+    userRow.appendChild(makeAdminCell);
     tbody.appendChild(userRow);
   });
   return tbody;
 }
 
-// Вызов createTableBody
 createTableBody(users, headers, usersRepository);
 
 function createTableCell(element) {
