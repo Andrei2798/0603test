@@ -99,6 +99,23 @@ function createTableRow(item, fieldsOrder) {
   // Создаем кнопку удаления элемента и добавляем обработчик события
   const deleteButtonCell = document.createElement("td");
   const deleteButton = document.createElement("button");
+  const userName = localStorage.getItem("userName");
+  const isAdmin = localStorage.getItem("isAdmin");
+
+  collectionRepository
+    .getCollectionOwner(collectionName)
+    .then((owner) => {
+      console.log("Collection owner: " + owner);
+      if (isAdmin == "true" || userName == owner) {
+        deleteButton.hidden = false;
+      } else {
+        deleteButton.hidden = true;
+      }
+    })
+    .catch((error) => {
+      console.error("Ошибка при получении владельца коллекции:", error);
+    });
+
   deleteButton.textContent = "Delete";
   deleteButton.classList.add("btn", "btn-danger");
   deleteButton.addEventListener("click", async () => {
@@ -126,3 +143,12 @@ function createTableRow(item, fieldsOrder) {
 
   return row;
 }
+
+const getCollectionOwner = async (collectionName) => {
+  try {
+    return await collectionRepository.getCollectionOwner(collectionName);
+  } catch (error) {
+    console.error("Ошибка при получении владельца коллекции:", error);
+    return null;
+  }
+};
