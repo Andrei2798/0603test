@@ -26,7 +26,7 @@ export default defineConfig({
   build: {
     target: "esnext",
     outDir: "dist",
-    // assetsDir: "images", //
+    assetsDir: "images", //
     rollupOptions: {
       input: {
         item: resolve(__dirname, "item.html"),
