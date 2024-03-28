@@ -83,7 +83,7 @@ function createTableBody(collectionItems, fieldsOrder) {
 function createLikeButton(item) {
   const likeButton = document.createElement("button");
   const likeImage = document.createElement("img");
-  likeImage.src = import.meta.env.BASE_URL + "public/images/like.png";
+  likeImage.src = import.meta.env.BASE_URL + "images/like.png";
   likeImage.alt = "Like";
   likeButton.appendChild(likeImage);
   likeButton.classList.add("btn", "btn-like");
