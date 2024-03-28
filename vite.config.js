@@ -29,7 +29,6 @@ export default defineConfig({
     // assetsDir: "images", //
     rollupOptions: {
       input: {
-        images,
         item: resolve(__dirname, "item.html"),
         index: resolve(__dirname, "index.html"),
         enter: resolve(__dirname, "enter.html"),
