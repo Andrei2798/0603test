@@ -88,7 +88,7 @@ function createTableBody(collectionItems, fieldsOrder) {
 function createLikeButton(item) {
   const likeButton = document.createElement("button");
   const likeImage = document.createElement("img");
-  likeImage.src = "/images/like.png"; // Установите путь к изображению лайка
+  likeImage.src = "images/like.png"; // Установите путь к изображению лайка
   likeImage.alt = "Like"; // Установите альтернативный текст для изображения лайка
   likeButton.appendChild(likeImage);
   likeButton.classList.add("btn", "btn-like"); // Добавляем класс для стилизации
