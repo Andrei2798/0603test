@@ -7,10 +7,8 @@ window.addEventListener("DOMContentLoaded", async () => {
   try {
     console.log(`Текущая коллекция: ${collectionName}`);
 
-    // Запрашиваем данные об элементах выбранной коллекции
     const collectionItems = await collectionRepository.getItems(collectionName);
 
-    // Отображаем полученные элементы на странице
     renderCollectionItems(collectionItems);
   } catch (error) {
     console.error("Ошибка при получении данных о коллекции:", error);
@@ -19,14 +17,11 @@ window.addEventListener("DOMContentLoaded", async () => {
 
 window.addEventListener("DOMContentLoaded", async () => {
   try {
-    // Получаем название выбранной коллекции из URL
     const urlParams = new URLSearchParams(window.location.search);
     const collectionName = urlParams.get("collection");
 
-    // Запрашиваем данные об элементах выбранной коллекции
     const collectionItems = await collectionRepository.getItems(collectionName);
 
-    // Отображаем полученные элементы на странице
     renderCollectionItems(collectionItems);
   } catch (error) {
     console.error("Ошибка при получении данных о коллекции:", error);
@@ -88,27 +83,23 @@ function createTableBody(collectionItems, fieldsOrder) {
 function createLikeButton(item) {
   const likeButton = document.createElement("button");
   const likeImage = document.createElement("img");
-  likeImage.src = import.meta.env.BASE_URL + "images/like.png";
+  likeImage.src = "src/images/like.png";
   likeImage.alt = "Like";
   likeButton.appendChild(likeImage);
-  likeButton.classList.add("btn", "btn-like"); // Добавляем класс для стилизации
+  likeButton.classList.add("btn", "btn-like");
 
-  // Создаем элемент для отображения количества лайков
   const likeCountSpan = document.createElement("span");
-  likeCountSpan.textContent = item.likes || 0; // Используем значение из объекта item или 0, если нет данных
+  likeCountSpan.textContent = item.likes || 0;
 
   likeButton.addEventListener("click", () => {
-    // Деактивируем кнопку лайка после первого нажатия
     likeButton.disabled = true;
 
-    // Увеличиваем количество лайков и обновляем отображение
     item.likes = (item.likes || 0) + 1;
     likeCountSpan.textContent = item.likes;
 
     console.log("Лайк поставлен!");
   });
 
-  // Добавляем изображение лайка и количество лайков в кнопку
   likeButton.appendChild(likeImage);
   likeButton.appendChild(likeCountSpan);
 
@@ -146,7 +137,7 @@ function createDeleteButton(item) {
         itemId
       );
       if (deleted) {
-        row.remove(); // Удаление строки из таблицы
+        row.remove();
 
         console.log("Элемент успешно удален.");
       } else {
@@ -165,7 +156,7 @@ function createTableRow(item, fieldsOrder) {
   const row = document.createElement("tr");
   fieldsOrder.forEach((key) => {
     const cell = document.createElement("td");
-    cell.textContent = item[key] || ""; // обработка отсутствующих данных
+    cell.textContent = item[key] || "";
     row.appendChild(cell);
   });
 
@@ -183,13 +174,11 @@ function createTableRow(item, fieldsOrder) {
       console.error("Ошибка при получении владельца коллекции:", error);
     });
 
-  // Создаем ячейку для лайка
   const likeButtonCell = document.createElement("td");
   const likeButton = createLikeButton(item);
   likeButtonCell.appendChild(likeButton);
   row.appendChild(likeButtonCell);
 
-  // Создаем ячейку для кнопки удаления
   const deleteButtonCell = document.createElement("td");
   const deleteButton = createDeleteButton(item);
   deleteButtonCell.appendChild(deleteButton);

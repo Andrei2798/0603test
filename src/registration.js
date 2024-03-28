@@ -1,6 +1,5 @@
 import { usersRepository } from "./usersRepository.js";
 
-// Обработчик события для кнопки добавления пользователя
 const addUserForm = document.querySelector("#user-form");
 addUserForm.addEventListener("submit", async (e) => {
   e.preventDefault();

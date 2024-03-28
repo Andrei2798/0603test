@@ -1,7 +1,7 @@
 import { usersRepository } from "./usersRepository.js";
 localStorage.clear();
 
-const baseUrl = window.location.origin; // Получаем доменное имя
+const baseUrl = window.location.origin;
 
 async function logIn(event) {
   event.preventDefault();

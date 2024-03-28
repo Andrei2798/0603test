@@ -19,8 +19,8 @@ export class UsersRepository {
   async create(params) {
     try {
       const docRef = await addDoc(
-        collection(this.db, this.collectionName), // Создание ссылки на коллекцию users в Firestore
-        params // Параметры нового пользователя
+        collection(this.db, this.collectionName),
+        params
       );
       console.log("Document written with ID: ", docRef.id);
     } catch (e) {
@@ -35,7 +35,6 @@ export class UsersRepository {
 
   async blockUser(id) {
     try {
-      // Добавлен блок try
       let result = await this.getUserReference(id);
       if (!result) {
         console.log("User not found in Firestore");
@@ -51,7 +50,6 @@ export class UsersRepository {
 
   async unblockUser(id) {
     try {
-      // Добавлен блок try
       let result = await this.getUserReference(id);
       if (!result) {
         console.log("User not found in Firestore");
@@ -61,14 +59,12 @@ export class UsersRepository {
       await updateDoc(userRef, { status: "unblocked" });
       console.log("User successfully blocked!");
     } catch (error) {
-      // Перемещен блок catch внутрь try
       console.error("Error blocking user:", error);
     }
   }
 
   async makeAdmin(id) {
     try {
-      // Добавлен блок try
       let result = await this.getUserReference(id);
       if (!result) {
         console.log("User not found in Firestore");
@@ -78,21 +74,9 @@ export class UsersRepository {
       await updateDoc(userRef, { status: "admin" });
       console.log("User successfully blocked!");
     } catch (error) {
-      // Перемещен блок catch внутрь try
       console.error("Error blocking user:", error);
     }
   }
-
-  // async deleteMany(ids) {
-  //   try {
-  //     ids.forEach(async (id) => {
-  //       await deleteDoc(doc(this.db, this.collectionName, id));
-  //     });
-  //     console.log("Documents successfully deleted!");
-  //   } catch (e) {
-  //     console.error("Error removing documents: ", e);
-  //   }
-  // }
 
   async getUserReference(id) {
     try {

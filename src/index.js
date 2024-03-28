@@ -45,7 +45,6 @@ function exit() {
 
 document.querySelector("#logout-button").addEventListener("click", exit);
 
-///////////////////////////////////////////////////////////////////
 document
   .querySelector("#create-collection-btn")
   .addEventListener("click", async () => {
@@ -62,11 +61,11 @@ document
 
     let itemsArray = itemsInput.split(",").map((item) => item.trim());
     let userName = localStorage.getItem("userName");
-    let id = Math.random().toString(36).substring(2); // Генерация случайной строки из символов и цифр
+    let id = Math.random().toString(36).substring(2);
     let topic = document.querySelector("#collection-topic").value;
     let description = document.querySelector("#collection-description").value;
     console.log(id);
-    // Создаем объект collectionData и добавляем в него стандартные поля
+
     let collectionData = {
       tag: "",
       name: collectionName,
@@ -75,18 +74,15 @@ document
       description: description,
     };
 
-    // Добавляем остальные поля на основе элементов из массива itemsArray
     itemsArray.forEach((item) => {
       collectionData[item] = "";
     });
 
-    // Передаем объект collectionData в функцию createCollection
     const collectionCreated = await collectionRepository.createCollection(
       collectionName,
       collectionData
     );
 
-    // Если коллекция успешно создана, обновляем Metadata
     if (collectionCreated) {
       try {
         const metadataDocRef = doc(
@@ -95,18 +91,15 @@ document
         );
         const metadataDocSnapshot = await getDoc(metadataDocRef);
 
-        // Получаем дополнительные поля для указанной коллекции
         const additionalFields = await collectionRepository.getAdditionalFields(
           collectionName
         );
 
-        // Если документ Metadata уже существует, обновляем его
         if (metadataDocSnapshot.exists()) {
           await updateDoc(metadataDocRef, {
             additionalFields: additionalFields,
           });
         } else {
-          // Если документ Metadata не существует, создаем его
           await setDoc(metadataDocRef, { additionalFields: additionalFields });
         }
 
@@ -119,7 +112,6 @@ document
 
 const collectionSelect = document.querySelector("#collection-select");
 
-// При загрузке страницы заполняем select существующими коллекциями
 window.addEventListener("DOMContentLoaded", async () => {
   try {
     let userName = localStorage.getItem("userName");
@@ -132,12 +124,9 @@ window.addEventListener("DOMContentLoaded", async () => {
     } else {
       userCollections = await collectionRepository.getAllCollections();
     }
-    // Получаем только те коллекции, у которых owner === userName
 
-    // Очищаем текущие опции в элементе select
     collectionSelect.innerHTML = "";
 
-    // Добавляем новые опции в элемент select
     userCollections.forEach((collection) => {
       const option = document.createElement("option");
       option.value = collection.name;
@@ -149,23 +138,17 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 });
 collectionRepository.getCollectionsByOwner();
-//////////////////////////////////////////////////
 
-// Назначаем обработчик события change выпадающему списку коллекций
 collectionSelect.addEventListener("change", async () => {
   try {
-    // Получаем выбранную коллекцию из выпадающего списка
     const selectedCollection = collectionSelect.value;
 
-    // Получаем дополнительные поля для выбранной коллекции
     const additionalFields = await collectionRepository.getAdditionalFields(
       selectedCollection
     );
 
-    // Очищаем предыдущие поля ввода
     dynamicFieldsContainer.innerHTML = "";
 
-    // Создаем поля ввода на основе полученных дополнительных полей
     additionalFields.forEach((field) => {
       const label = document.createElement("label");
       label.textContent = `${field}:`;
@@ -183,21 +166,17 @@ collectionSelect.addEventListener("change", async () => {
   }
 });
 const dynamicFieldsContainer = document.querySelector("#dynamic-fields");
-// Назначаем обработчик события change выпадающему списку коллекций
+
 collectionSelect.addEventListener("change", async () => {
   try {
-    // Получаем выбранную коллекцию из выпадающего списка
     const selectedCollection = collectionSelect.value;
 
-    // Получаем дополнительные поля для выбранной коллекции
     const additionalFields = await collectionRepository.getAdditionalFields(
       selectedCollection
     );
 
-    // Очищаем предыдущие поля ввода
     dynamicFieldsContainer.innerHTML = "";
 
-    // Создаем поля ввода на основе полученных дополнительных полей
     additionalFields.forEach((field) => {
       const label = document.createElement("label");
       label.textContent = `${field}:`;
@@ -215,11 +194,10 @@ collectionSelect.addEventListener("change", async () => {
   }
 });
 
-// Обработчик события отправки формы создания элемента
 document
   .querySelector("#create-item-form")
   .addEventListener("submit", async (e) => {
-    e.preventDefault(); // Предотвращаем стандартное поведение формы
+    e.preventDefault();
 
     try {
       const collectionName = collectionSelect.value;
@@ -227,7 +205,6 @@ document
       const tag = document.querySelector("#tag").value;
       const itemFields = {};
 
-      // Добавляем автоматически owner из localStorage
       const owner = localStorage.getItem("userName");
       itemFields["owner"] = owner;
 
@@ -239,7 +216,6 @@ document
         itemFields[field] = fieldValue;
       });
 
-      // Генерация уникального ID для айтема
       const id = uuidv4();
 
       const itemData = {
@@ -249,7 +225,6 @@ document
         ...itemFields,
       };
 
-      // Создание нового айтема в базе данных
       await collectionRepository.createItem(
         collectionName,
         itemName,
@@ -261,7 +236,6 @@ document
     }
   });
 
-// JavaScript код для отображения коллекций в таблице
 window.addEventListener("DOMContentLoaded", async () => {
   try {
     const collectionTableBody = document.querySelector(
@@ -271,10 +245,8 @@ window.addEventListener("DOMContentLoaded", async () => {
     const isAdmin = localStorage.getItem("isAdmin");
     const userName = localStorage.getItem("userName");
 
-    // Очистка текущих данных в таблице
     collectionTableBody.innerHTML = "";
 
-    // Функция для получения владельца коллекции
     const getCollectionOwner = async (collectionName) => {
       try {
         return await collectionRepository.getCollectionOwner(collectionName);
@@ -284,11 +256,10 @@ window.addEventListener("DOMContentLoaded", async () => {
       }
     };
 
-    // Добавление строк с данными о коллекциях в таблицу
     for (let index = 0; index < collectionNames.length; index++) {
       const collection = collectionNames[index];
       const row = collectionTableBody.insertRow(index);
-      // Установка данных о коллекции в ячейки таблицы
+
       const cell1 = row.insertCell(0);
       cell1.textContent = index + 1;
       const cell2 = row.insertCell(1);
@@ -300,10 +271,8 @@ window.addEventListener("DOMContentLoaded", async () => {
       const cell5 = row.insertCell(4);
       const cell6 = row.insertCell(5);
 
-      // Получение владельца коллекции
       const owner = await getCollectionOwner(collection.name);
 
-      // Проверка прав доступа для отображения кнопок
       const isOwner = userName === owner;
       const showButtons = isAdmin === "true" || isOwner;
 
@@ -313,28 +282,23 @@ window.addEventListener("DOMContentLoaded", async () => {
       cell6.appendChild(viewButton);
 
       viewButton.addEventListener("click", function () {
-        // Получаем название выбранной коллекции
         const collectionName = collection.name;
 
-        // Формируем URL для перехода на страницу item.html с параметром collectionName в URL
         const url = `item.html?collection=${encodeURIComponent(
           collectionName
         )}`;
 
-        // Перенаправляем пользователя на страницу item.html
         window.location.href = url;
       });
 
-      // Добавление кнопок в последние ячейки строки
       if (showButtons) {
         const deleteButton = document.createElement("button");
         deleteButton.textContent = "Delete";
         deleteButton.classList.add("btn", "btn-danger");
         cell5.appendChild(deleteButton);
 
-        // Обработчик события клика на кнопку удаления коллекции
         deleteButton.addEventListener("click", async (event) => {
-          event.stopPropagation(); // Остановка всплытия события, чтобы не срабатывал клик на строке
+          event.stopPropagation();
 
           try {
             const collectionNameToDelete = collection.name;
@@ -342,15 +306,12 @@ window.addEventListener("DOMContentLoaded", async () => {
               collectionNameToDelete
             );
             if (deleted) {
-              // Удаляем строку из таблицы
               row.remove();
             }
           } catch (error) {
             console.error("Ошибка при удалении коллекции:", error);
           }
         });
-
-        // Обработчик события клика на кнопку просмотра коллекции
       }
     }
   } catch (error) {
