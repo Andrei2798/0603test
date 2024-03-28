@@ -5,9 +5,6 @@ const collectionName = urlParams.get("collection");
 
 window.addEventListener("DOMContentLoaded", async () => {
   try {
-    // Получаем название выбранной коллекции из URL
-
-    // Выводим название коллекции в консоль
     console.log(`Текущая коллекция: ${collectionName}`);
 
     // Запрашиваем данные об элементах выбранной коллекции
@@ -88,16 +85,37 @@ function createTableBody(collectionItems, fieldsOrder) {
   return tbody;
 }
 
-function createTableRow(item, fieldsOrder) {
-  const row = document.createElement("tr");
-  fieldsOrder.forEach((key) => {
-    const cell = document.createElement("td");
-    cell.textContent = item[key] || ""; // handle missing data gracefully
-    row.appendChild(cell);
+function createLikeButton(item) {
+  const likeButton = document.createElement("button");
+  const likeImage = document.createElement("img");
+  likeImage.src = "images/like.png"; // Установите путь к изображению лайка
+  likeImage.alt = "Like"; // Установите альтернативный текст для изображения лайка
+  likeButton.appendChild(likeImage);
+  likeButton.classList.add("btn", "btn-like"); // Добавляем класс для стилизации
+
+  // Создаем элемент для отображения количества лайков
+  const likeCountSpan = document.createElement("span");
+  likeCountSpan.textContent = item.likes || 0; // Используем значение из объекта item или 0, если нет данных
+
+  likeButton.addEventListener("click", () => {
+    // Деактивируем кнопку лайка после первого нажатия
+    likeButton.disabled = true;
+
+    // Увеличиваем количество лайков и обновляем отображение
+    item.likes = (item.likes || 0) + 1;
+    likeCountSpan.textContent = item.likes;
+
+    console.log("Лайк поставлен!");
   });
 
-  // Создаем кнопку удаления элемента и добавляем обработчик события
-  const deleteButtonCell = document.createElement("td");
+  // Добавляем изображение лайка и количество лайков в кнопку
+  likeButton.appendChild(likeImage);
+  likeButton.appendChild(likeCountSpan);
+
+  return likeButton;
+}
+
+function createDeleteButton(item) {
   const deleteButton = document.createElement("button");
   const userName = localStorage.getItem("userName");
   const isAdmin = localStorage.getItem("isAdmin");
@@ -128,7 +146,7 @@ function createTableRow(item, fieldsOrder) {
         itemId
       );
       if (deleted) {
-        row.remove(); // Удаляем строку из таблицы
+        row.remove(); // Удаление строки из таблицы
 
         console.log("Элемент успешно удален.");
       } else {
@@ -138,17 +156,44 @@ function createTableRow(item, fieldsOrder) {
       console.error("Ошибка при удалении элемента:", error);
     }
   });
+
+  return deleteButton;
+}
+
+function createTableRow(item, fieldsOrder) {
+  const isAuthorized = localStorage.getItem("isAuthorithed");
+  const row = document.createElement("tr");
+  fieldsOrder.forEach((key) => {
+    const cell = document.createElement("td");
+    cell.textContent = item[key] || ""; // обработка отсутствующих данных
+    row.appendChild(cell);
+  });
+
+  collectionRepository
+    .getCollectionOwner(collectionName)
+    .then((owner) => {
+      console.log("Collection owner: " + owner);
+      if (isAuthorized == "true") {
+        likeButtonCell.hidden = false;
+      } else {
+        likeButtonCell.hidden = true;
+      }
+    })
+    .catch((error) => {
+      console.error("Ошибка при получении владельца коллекции:", error);
+    });
+
+  // Создаем ячейку для лайка
+  const likeButtonCell = document.createElement("td");
+  const likeButton = createLikeButton(item);
+  likeButtonCell.appendChild(likeButton);
+  row.appendChild(likeButtonCell);
+
+  // Создаем ячейку для кнопки удаления
+  const deleteButtonCell = document.createElement("td");
+  const deleteButton = createDeleteButton(item);
   deleteButtonCell.appendChild(deleteButton);
   row.appendChild(deleteButtonCell);
 
   return row;
 }
-
-const getCollectionOwner = async (collectionName) => {
-  try {
-    return await collectionRepository.getCollectionOwner(collectionName);
-  } catch (error) {
-    console.error("Ошибка при получении владельца коллекции:", error);
-    return null;
-  }
-};
