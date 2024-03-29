@@ -1,16 +1,20 @@
-/* Дополнительные стили */
+body {
+  height: 100%;
+}
+
 .header {
-  background-color: #ffed00; /* Желтый цвет для хедера */
+  background-color: #ffed00;
 }
 
 .header .container {
   display: flex;
-  justify-content: space-between; /* Расположение элементов по краям */
-  align-items: center; /* Выравнивание по центру по вертикали */
+  justify-content: space-between;
+  align-items: center;
 }
 
 main {
-  min-height: 500px;
+  min-height: calc(100hv);
+  padding-bottom: 60px; /* Высота футера */
 }
 .search-form {
   display: flex;
@@ -47,39 +51,38 @@ main {
 
 #create-item-form .form-group input {
   width: 100%;
-  max-width: 300px; /* Максимальная ширина поля ввода */
+  max-width: 300px;
   margin-bottom: 10px;
 }
 
 .collection-title {
-  text-align: center; /* Выравнивание текста по центру */
-  margin-top: 20px; /* Отступ сверху для выравнивания */
+  text-align: center;
+  margin-top: 20px;
 }
 
-/* Пример стилей для эффекта hover */
 #collection-table tbody tr:hover {
-  background-color: #f0f0f0; /* Изменение цвета фона при наведении курсора */
-  cursor: pointer; /* Изменение курсора при наведении на строку */
+  background-color: #f0f0f0;
+  cursor: pointer;
 }
 
 .table {
-  border: 3px solid black; /* Цвет границы ячеек */
+  border: 3px solid black;
 }
 
 .footer {
-  left: 0;
+  position: fixed;
   bottom: 0;
+  left: 0;
   width: 100%;
-  background-color: #005495; /* Цвет фона футера */
-  color: #fff; /* Цвет текста в футере */
+  background-color: #005495;
+  color: #fff;
   text-align: center;
-  padding: 20px 0; /* Отступы внутри футера */
+  padding: 20px 0;
 }
-
 #collection-table td,
 #collection-table th {
-  border: 1px solid black; /* Устанавливаем черную границу для ячеек таблицы */
-  padding: 8px; /* Добавляем отступ внутри ячеек */
+  border: 1px solid black;
+  padding: 8px;
 }
 
 #collection-table {
@@ -87,12 +90,11 @@ main {
 }
 
 #collection-table th {
-  background-color: #189c3e; /* Устанавливаем фон для заголовков таблицы */
+  background-color: #189c3e;
 }
 
-/* Стили для кнопок в ячейках таблицы */
 #collection-table .btn {
-  margin-right: 5px; /* Добавляем небольшой отступ между кнопками */
+  margin-right: 5px;
 }
 
 .list-group mt-4 {
@@ -100,5 +102,5 @@ main {
 }
 
 .footer-text {
-  color: white; /* Замените #your-desired-color на желаемый цвет */
+  color: white;
 }
