@@ -269,6 +269,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       const cell4 = row.insertCell(3);
       cell4.textContent = collection.topic;
       const cell5 = row.insertCell(4);
+
       const cell6 = row.insertCell(5);
 
       const owner = await getCollectionOwner(collection.name);

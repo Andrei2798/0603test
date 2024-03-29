@@ -6,7 +6,6 @@ const showUsersButton = document.querySelector("#show-users-btn");
 if (showUsersButton) {
   showUsersButton.addEventListener("click", async () => {
     try {
-      // Получаем список пользователей и обновляем интерфейс
       const users = await usersRepository.getAll();
       renderUserList(users);
     } catch (error) {
@@ -68,9 +67,8 @@ function createTableBody(users, headers) {
   users.forEach((user) => {
     const userRow = createUserRow(user, headers);
 
-    // Создаем ячейки для кнопок "Delete" и "Block"
     const deleteButton = createButton("Delete", "btn-danger", async (event) => {
-      event.stopPropagation(); // Остановка всплытия события, чтобы не срабатывал клик на строке
+      event.stopPropagation();
       try {
         await usersRepository.deleteUser(String(user.id));
         await renderUserList();
@@ -135,14 +133,13 @@ function getUsersHeaders(users) {
   return users.length > 0 ? Object.keys(users[0]) : [];
 }
 
-// Назначаем обработчик события клика на кнопки удаления
 document.querySelectorAll(".delete-user-btn").forEach((btn) => {
   btn.addEventListener("click", async (event) => {
-    event.stopPropagation(); // Остановка всплытия события, чтобы не срабатывал клик на строке
+    event.stopPropagation();
     const userId = btn.dataset.id;
     try {
       await usersRepository.delete(userId);
-      await renderUserList(); // После удаления пользователя обновляем список пользователей
+      await renderUserList();
     } catch (error) {
       console.error("Error deleting user:", error);
     }
@@ -153,7 +150,6 @@ try {
   const users = await usersRepository.getAll();
   users.forEach((user) => {
     console.log("User ID:", user.id);
-    // Здесь вы можете выполнить дополнительные действия с id пользователями, например, отобразить их на странице
   });
 } catch (error) {
   console.error("Error fetching users:", error);
