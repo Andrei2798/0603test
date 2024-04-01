@@ -20,23 +20,19 @@ class CollectionRepository {
 
   async createCollection(collectionName, collectionData) {
     try {
-      // Создаем новую коллекцию в Firestore
       const newCollectionRef = collection(this.db, collectionName);
 
-      // Добавляем пустой документ в коллекцию с данными collectionData
       await addDoc(newCollectionRef, collectionData);
 
-      // Проверяем наличие дополнительных полей в collectionData
       const additionalFields = Object.keys(collectionData).filter(
         (key) => key !== "id" && key !== "tag" && key !== "name"
       );
 
-      // Если есть дополнительные поля, добавляем их в Metadata
       if (additionalFields.length > 0) {
         await setDoc(doc(this.metadataCollection, collectionName), {
           additionalFields,
-          topic: collectionData.topic || "", // Добавляем поле topic, если указано, иначе оставляем пустую строку
-          description: collectionData.description || "", // Добавляем поле description, если указано, иначе оставляем пустую строку
+          topic: collectionData.topic || "",
+          description: collectionData.description || "",
           owner: collectionData.owner,
         });
         console.log(
@@ -44,10 +40,9 @@ class CollectionRepository {
           collectionName
         );
       } else {
-        // Если дополнительных полей нет, просто добавляем поля topic и description в Metadata
         await setDoc(doc(this.metadataCollection, collectionName), {
-          topic: collectionData.topic || "", // Добавляем поле topic, если указано, иначе оставляем пустую строку
-          description: collectionData.description || "", // Добавляем поле description, если указано, иначе оставляем пустую строку
+          topic: collectionData.topic || "",
+          description: collectionData.description || "",
         });
         console.log(
           "Поля topic и description сохранены в Metadata для коллекции ",
@@ -56,10 +51,10 @@ class CollectionRepository {
       }
 
       console.log("Коллекция успешно создана в Firestore!");
-      return true; // Возвращаем true в случае успешного создания
+      return true;
     } catch (error) {
       console.error("Ошибка при создании коллекции:", error);
-      return false; // Возвращаем false в случае ошибки
+      return false;
     }
   }
 
@@ -84,18 +79,14 @@ class CollectionRepository {
 
   async deleteCollection(collectionName) {
     try {
-      // Создаем ссылку на коллекцию
       const collectionRef = collection(this.db, collectionName);
 
-      // Получаем все документы в коллекции
       const querySnapshot = await getDocs(collectionRef);
 
-      // Удаляем каждый документ в коллекции
       querySnapshot.forEach(async (doc) => {
         await deleteDoc(doc.ref);
       });
 
-      // Удаляем соответствующий документ из Metadata
       await deleteDoc(doc(this.metadataCollection, collectionName));
 
       console.log("Коллекция успешно удалена:", collectionName);
@@ -108,21 +99,17 @@ class CollectionRepository {
 
   async deleteItem(collectionName, itemId) {
     try {
-      // Проверяем, передан ли корректный идентификатор элемента
       if (!itemId) {
         console.error("Ошибка: Не указан идентификатор элемента");
         return false;
       }
 
-      // Создаем ссылку на коллекцию
       const collectionRef = collection(this.db, collectionName);
 
-      // Получаем документ с указанным идентификатором
       const querySnapshot = await getDocs(
         query(collectionRef, where("id", "==", itemId))
       );
 
-      // Проверяем, найден ли документ
       if (querySnapshot.empty) {
         console.error(
           `Ошибка: Документ с ID ${itemId} в коллекции ${collectionName} не найден`
@@ -130,8 +117,7 @@ class CollectionRepository {
         return false;
       }
 
-      // Удаляем найденный документ
-      const docSnapshot = querySnapshot.docs[0]; // Предполагаем, что найдется только один документ
+      const docSnapshot = querySnapshot.docs[0];
       await deleteDoc(doc(docSnapshot.ref.parent, docSnapshot.id));
 
       console.log(
@@ -173,8 +159,8 @@ class CollectionRepository {
       querySnapshot.forEach((doc) => {
         collections.push({
           name: doc.id,
-          description: doc.data().description || "", // если нет описания, используем пустую строку
-          topic: doc.data().topic || "", // если нет темы, используем пустую строку
+          description: doc.data().description || "",
+          topic: doc.data().topic || "",
         });
       });
       return collections;
@@ -190,7 +176,7 @@ class CollectionRepository {
       if (docSnapshot.exists()) {
         const data = docSnapshot.data();
         if (data && data.additionalFields !== undefined) {
-          // Исключаем поле 'owner' из списка дополнительных полей
+          // Исключаем поле 'owner'
           const additionalFields = Object(data.additionalFields).filter(
             (field) => field !== "owner"
           );

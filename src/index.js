@@ -139,32 +139,6 @@ window.addEventListener("DOMContentLoaded", async () => {
 });
 collectionRepository.getCollectionsByOwner();
 
-collectionSelect.addEventListener("change", async () => {
-  try {
-    const selectedCollection = collectionSelect.value;
-
-    const additionalFields = await collectionRepository.getAdditionalFields(
-      selectedCollection
-    );
-
-    dynamicFieldsContainer.innerHTML = "";
-
-    additionalFields.forEach((field) => {
-      const label = document.createElement("label");
-      label.textContent = `${field}:`;
-
-      const input = document.createElement("input");
-      input.type = "text";
-      input.id = field;
-      input.name = field;
-
-      dynamicFieldsContainer.appendChild(label);
-      dynamicFieldsContainer.appendChild(input);
-    });
-  } catch (error) {
-    console.error("Ошибка при обновлении дополнительных полей:", error);
-  }
-});
 const dynamicFieldsContainer = document.querySelector("#dynamic-fields");
 
 collectionSelect.addEventListener("change", async () => {
