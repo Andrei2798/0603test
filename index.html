@@ -6,7 +6,7 @@
     <title>Personal Collections</title>
     <link rel="stylesheet" href="main.css" />
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <!-- Подключаем стили Bootstrap -->
+   
     <link
       href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
       rel="stylesheet"
@@ -16,12 +16,12 @@
     <style></style>
   </head>
   <body>
-    <!-- Хедер с меню и кнопками -->
+    
     <header class="header" id="main-header">
       <div class="container">
-        <!-- Меню или логотип -->
+        
         <h1 class="logo">Сollections</h1>
-        <!-- Меню -->
+        
         <ul class="nav">
           <li class="nav-item">
             <a class="nav-link" href="#">Main</a>
@@ -39,12 +39,7 @@
             <a class="nav-link" href="#">Offers</a>
           </li>
         </ul>
-      
-        <div class="search-form">
-          <input type="text" class="form-control" placeholder="Search" />
-          <button class="btn btn-primary">Search</button>
-        </div>
-        <!-- Кнопки входа и регистрации -->
+                   
         <div>
           <button
             class="btn btn-primary text-white mr-2"
@@ -68,7 +63,7 @@
         </div>
       </div>
     </header>
-    <main><!-- Кнопка для отображения айтема -->
+    <main>
       <button id="create-collection-btn" class="btn btn-primary mt-2" hidden>Create Collection or item</button>
       <div class="forms-container">
         <form id="create-collection-form" class="create-collection-form bg-danger text-white p-4 rounded" hidden>
@@ -88,8 +83,7 @@
         <div class="form-group mx-auto" id="items-container">
           <label for="item">Items:</label>
           <input type="text" id="item" class="form-control" placeholder="Enter item"  />
-          <!-- Добавить кнопку для добавления нового поля для айтема -->
-          
+                    
         </div>
         <button type="submit" class="btn btn-primary btn-block">Create Collection</button>
       </form>
@@ -98,26 +92,25 @@
         <div class="form-group mx-auto">
             <label for="collection-select">Select Collection:</label>
             <select id="collection-select" class="form-control">
-                <!-- Опции коллекций будут добавлены динамически с помощью JavaScript -->
+                
             </select>
         </div>
         <div class="form-group mx-auto">
-            <label for="item-name" class="form-control-label">Item name:</label>
-            <input type="text" id="item-name" class="form-control">
+            <label for="item-name" class="form-control-label" >Item name:</label>
+            <input type="text" id="item-name" class="form-control" required>
         </div>
         <div class="form-group mx-auto">
             <label for="tag" class="form-control-label">Tag:</label>
-            <input type="text" id="tag" class="form-control">
+            <input type="text" id="tag" class="form-control" required>
         </div>
         <div id="dynamic-fields" class="form-group mx-auto">
-            <!-- Дополнительные поля  в зависимости от выбранной коллекции -->
+           
         </div>
         <button type="submit" class="btn btn-primary btn-block">Create Item</button>
     </form>
   
     </div>
-  
-    <!-- Таблица для отображения коллекций -->
+      
     <h2 class="collection-title">Collections</h2>
   <table id="collection-table" class="table mt-4">
     <thead>  
@@ -128,19 +121,18 @@
         <th>Topic</th>
         <th>Delete</th>
         <th>View</th>
-        <!-- Другие заголовки столбцов, если нужно -->
+       
       </tr>
     </thead>
     <tbody>
-      <!-- Здесь  строки с данными о коллекциях -->
+      
     </tbody>
   </table>
   
-   
-      <!-- Кнопка для отображения списка пользователей -->
+         
       <button id="show-users-btn" class="btn btn-primary mt-2" hidden>Show Users</button>
       <ul id="user-list" class="list-group mt-4"></ul>
-      <!-- Подключаем скрипты Bootstrap (необходимо для работы некоторых компонентов) -->
+     
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     </main>
     
@@ -151,4 +143,3 @@
     </footer>
     
 </body>
-   

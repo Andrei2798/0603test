@@ -86,7 +86,7 @@ function createTableBody(users, headers) {
       await renderUserList();
     });
 
-    const adminButton = createButton("Make admin", "btn-success", async () => {
+    const adminButton = createButton("Make admin", "btn-primary", async () => {
       await usersRepository.makeAdmin(String(user.id));
       await renderUserList();
     });

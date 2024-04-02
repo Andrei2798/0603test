@@ -5,20 +5,10 @@ const collectionName = urlParams.get("collection");
 
 window.addEventListener("DOMContentLoaded", async () => {
   try {
-    console.log(`Текущая коллекция: ${collectionName}`);
-
-    const collectionItems = await collectionRepository.getItems(collectionName);
-
-    renderCollectionItems(collectionItems);
-  } catch (error) {
-    console.error("Ошибка при получении данных о коллекции:", error);
-  }
-});
-
-window.addEventListener("DOMContentLoaded", async () => {
-  try {
     const urlParams = new URLSearchParams(window.location.search);
     const collectionName = urlParams.get("collection");
+
+    console.log(`Текущая коллекция: ${collectionName}`);
 
     const collectionItems = await collectionRepository.getItems(collectionName);
 

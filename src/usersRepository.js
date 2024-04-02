@@ -57,7 +57,7 @@ export class UsersRepository {
       }
       const userRef = doc(this.db, this.collectionName, result);
       await updateDoc(userRef, { status: "unblocked" });
-      console.log("User successfully blocked!");
+      console.log("User successfully unblocked!");
     } catch (error) {
       console.error("Error blocking user:", error);
     }

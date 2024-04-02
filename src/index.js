@@ -273,8 +273,6 @@ window.addEventListener("DOMContentLoaded", async () => {
         cell5.appendChild(deleteButton);
 
         deleteButton.addEventListener("click", async (event) => {
-          event.stopPropagation();
-
           try {
             const collectionNameToDelete = collection.name;
             const deleted = await collectionRepository.deleteCollection(
