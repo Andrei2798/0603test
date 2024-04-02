@@ -1,5 +1,5 @@
 import {
-  getFirestore,
+  getFirestore, // для получения ссылки на экземпляр Firestore базы данных
   collection,
   addDoc,
   getDocs,
@@ -20,11 +20,12 @@ class CollectionRepository {
 
   async createCollection(collectionName, collectionData) {
     try {
-      const newCollectionRef = collection(this.db, collectionName);
+      const newCollectionRef = collection(this.db, collectionName); // ссылка на коллеекцию
 
-      await addDoc(newCollectionRef, collectionData);
+      await addDoc(newCollectionRef, collectionData); // добавуить документ в коллекцию
 
       const additionalFields = Object.keys(collectionData).filter(
+        // тмена полей объекта фильтруются
         (key) => key !== "id" && key !== "tag" && key !== "name"
       );
 

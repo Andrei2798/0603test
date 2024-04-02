@@ -34,7 +34,8 @@ async function logIn(event) {
 
     if (!userFound) {
       document.querySelector("#message").style.color = "red";
-      document.querySelector("#message").innerHTML = "Wrong email or password";
+      document.querySelector("#message").innerHTML =
+        "Wrong name or password. Probably user does not exists";
     }
   } catch (error) {
     console.error("Error fetching users:", error);

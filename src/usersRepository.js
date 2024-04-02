@@ -93,7 +93,6 @@ export class UsersRepository {
           }
         })
       );
-      console.log(results);
       return results.find((id) => id !== undefined) || null;
     } catch (error) {
       console.error("Error getting user ID from Firestore:", error);
